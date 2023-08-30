@@ -12,7 +12,7 @@ import java.util.Map;
 @Controller
 public class mainController {
 
-    @GetMapping("/qtip")
+    @GetMapping("/")
     public String main(){
         return "getusage";
     }
