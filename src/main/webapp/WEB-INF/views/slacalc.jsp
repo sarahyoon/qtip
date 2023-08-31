@@ -48,7 +48,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="slacalc" class="nav-link">
+                        <a href="slacalc" class="nav-link active">
                             <i class="nav-icon fas fa-th"></i>
                             <p>
                                 SLA Calculator
@@ -206,6 +206,12 @@
 
 <script>
     $(function () {
+
+        $('.nav-link').on('click', function (){
+            $('.nav-link').removeClass('active');
+            $(this).addClass('active');
+        });
+
         //Datemask dd/mm/yyyy
         $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
         //Datemask2 mm/dd/yyyy

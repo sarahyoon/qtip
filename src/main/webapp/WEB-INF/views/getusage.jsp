@@ -93,7 +93,7 @@
                     <!-- Add icons to the links using the .nav-icon class
                          with font-awesome or any other icon font library -->
                     <li class="nav-item">
-                        <a href="/" class="nav-link">
+                        <a href="/" class="nav-link active">
                             <i class="nav-icon fas fa-tachometer-alt"></i>
                             <p>
                                 Get Usage
@@ -343,8 +343,6 @@
 <!-- AdminLTE App -->
 <script src="/resources/dist/js/adminlte.min.js"></script>
 
-<!--Chips -->
-<%--<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>--%>
 
 <!-- Page specific script -->
 <script>
@@ -364,7 +362,7 @@
     var meterCategory_list=["Unassigned","All","Compute","Storage","SQL","CDN","Service Bus","Access Control","Cache","SQL Reporting","VPN Gateway","Media","Media Services","Backup","Virtual Machines","Virtual Machines Licenses",
         "Cloud Services","BizTalk Services","Integration","Azure App Service","Multi-Factor Authentication","Data Management","Mobile Services","Notification Hubs","Scheduler","Identity","Visual Studio","Networking","HDInsight","Websites",
         "Windows Azure CDN","Traffic Manager","Recovery Services","Windows Azure Storage","Data Services","Linux Support","App Services","Virtual Network","SQL Database","Windows Azure - All Services","Bandwidth","Redis Cache","API Management",
-        "Batch","Business Analytics","Event Hubs","Automation","RemoteApp","StorSimple","VNet Gateway","ExpressRoute","Azure Site Recovery","Machine Learning Studio","Azure Search","Azure Cosmos DB","Log Analytics","Application Gateway","Stream Analytics",
+        "Batch","Business Analytics","Event Hubs","Automation","RemoteApp","VNet Gateway","ExpressRoute","Azure Site Recovery","Machine Learning Studio","Azure Search","Azure Cosmos DB","Log Analytics","Application Gateway","Stream Analytics",
         "Azure Data Catalog","Key Vault","Azure Data Factory","Azure IoT Hub","Content Delivery Network","Azure DevOps","Cognitive Services","ML API Services","Power BI","IoT Hub","Security Center","Data Catalog","SQL Data Warehouse",
         "Visual Studio Subscription","CDN Data Transfer","Functions","Logic Apps","SQL Server Stretch Database","Power BI Embedded","Insight and Analytics","Automation and Control","Analysis Services","Azure DNS","Dynamics 365 for Customer Insights",
         "Application Insights","Azure Active Directory Domain Services","Data Lake Analytics","Data Lake Store","Azure Active Directory B2C","Citrix","Xamarin Test Cloud","App Center","Xamarin University","Time Series Insights","Azure Database for MySQL",
@@ -379,7 +377,7 @@
         "Azure Managed Instance for Apache Cassandra","Azure Percept","Test Base","Azure Route Server","Web PubSub","GitHub AE","Azure Defender","CVP-101","Azure WVD Promo","Intelligent Recommendations","Windows Virtual Desktop","Fraud Protection",
         "Business Applications Embedded","Azure HPC Workbench","Azure Applied AI Services","Dataverse","Power Platform Request","Power Apps","Microsoft Graph Services","Azure Chaos Studio","Azure Container Apps","Azure Load Testing",
         "Microsoft Azure Payment HSM","Hybrid Data Services","Azure Fluid Relay","Azure Grafana Service","Project Caspian","Power Automate","Azure confidential ledger","Syntex","Microsoft Dev Box","Azure Orbital Edge",
-        "Microsoft Playwright Testing","Packet Core","Power Pages","Azure Arc-enabled AKS","Energy Data Manager","Analytics","Azure Singularity","Voice Core","AKS Edge Essentials","AI Ops","Update Management","Microsoft Fabric",
+        "Microsoft Playwright Testing","Azure Arc-enabled AKS","Energy Data Manager","Analytics","Azure Singularity","Voice Core","AKS Edge Essentials","AI Ops","Update Management","Microsoft Fabric",
         "Azure Modeling and Simulation Workbench","Routing","Messaging","Phone Numbers","Azure Operator Nexus","Import / Export","Visual Studio Team Services",
         "Application Dependency Monitor","SQL StreamInsight","ExpressRoute (IXP)","All Services","ExpressRoute (Carrier)","HockeyApp","Test Cloud","MySQL Database on Azure","Domains","Microsoft IoT Central",
         "Azure Container Service","Database Compute Unit","Web Sites","Cloud Connection Service","Visual Studio Connected Environment","Sonar DaaS","Software Pre Pay",
@@ -387,6 +385,11 @@
         "Cosmic","RoundingAdjustment","Azure Code Scanning","Azure","Virtual Machine Licenses"];
 
     $(function () {
+
+        $('.nav-link').on('click', function (){
+            $('.nav-link').removeClass('active');
+            $(this).addClass('active');
+        });
 
 
         $('#getshard').click(function(){
@@ -415,6 +418,9 @@
 
             $("#chips_area").append(html);
             chips_num++;
+
+            $("#add_subs").val('');
+
         });
 
 
@@ -589,11 +595,12 @@
                 data: infos,
                 dataType: "json",
                 success:function(data){
-                    console.log(data);
-                    $('#results').append(data);
+                    console.log(data.query);
+                    $('#results').append(data.query);
                     stepper.next();
                 },
-                error:function(xhr, status, error){
+                error:function(data, xhr, status, error){
+                    console.log(data.query);
                     console.log(status, error);
                 }
             });

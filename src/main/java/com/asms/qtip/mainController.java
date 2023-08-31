@@ -2,10 +2,11 @@ package com.asms.qtip;
 
 import org.apache.tomcat.util.json.JSONParser;
 import org.apache.tomcat.util.json.ParseException;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,7 +25,7 @@ public class mainController {
 
     @ResponseBody
     @RequestMapping(value="/getusage", method={RequestMethod.POST, RequestMethod.GET})
-    public String getQuery(@RequestParam Map<String, Object> map) throws ParseException {
+    public Map<String, String> getQuery(@RequestParam Map<String, Object> map) throws ParseException {
             queryBuilder qb = new queryBuilder();
             InfoDO infos = new InfoDO();
 
@@ -57,6 +58,8 @@ public class mainController {
 
             String query = qb.getUsageQuery(infos);
             System.out.println(query);
-            return query;
+            Map<String, String> result = new HashMap<>();
+            result.put("query", query);
+            return result;
     }
 }

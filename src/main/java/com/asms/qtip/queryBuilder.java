@@ -10,7 +10,7 @@ public class queryBuilder {
 
     public String getUsageQuery(InfoDO info) throws ParseException {
 
-        String query = "\"GetUCDDAMPAWSv2(XXXXXXXX,";
+        String query = "GetUCDDAMPAWSv2(XXXXXXXX,";
         query += "datetime("+ info.getStartDate() +"),datetime(" + info.getEndDate() + "))";
 
         //CostType
@@ -39,27 +39,26 @@ public class queryBuilder {
 
         //MeterCategory
         List<String> mcs = info.getMeterCategory();
-        if(!mcs.get(0).equals("All")){
-            query += "<br> | where MeterCategory in! (";
+        if(mcs.size() >0){
+            if(!mcs.get(0).equals("All")){
+                query += "<br> | where MeterCategory in~ (";
 
-            for(int i=0;i<mcs.size();i++){
+                for(int i=0;i<mcs.size();i++){
 
-                if(i== list.size()-1){
-                    query += "\"" +list.get(i) + "\")";
-                }else{
-                    query += "\"" +list.get(i) + "\",";
+                    if(i== mcs.size()-1){
+                        query += "\"" +mcs.get(i).trim() + "\")";
+                    }else{
+                        query += "\"" +mcs.get(i).trim() + "\",";
+                    }
                 }
             }
         }
-
-
-
 
         List<Map<String, String>> ops = info.getOperations();
         System.out.println(ops.get(0).get("field"));
 
 
-        query += "<br> | summarize Quantity = sum(Quantity), sum(Cost) by Date,SubscriptionGuid,MeterCategory,MeterName,ResourceId,AdditionalInfo,ChargeTypeInternal\"";
+        query += "<br> | summarize Quantity = sum(Quantity), sum(Cost) by Date,SubscriptionGuid,MeterCategory,MeterName,ResourceId,AdditionalInfo,ChargeTypeInternal";
 
 
         System.out.println(query);
