@@ -105,7 +105,7 @@
                                 </div>
                                 <div>
                                     <button type="button" class="btn btn-block btn-outline-primary" id="range_calc">
-                                        Calculate1
+                                        Calculate11
                                     </button>
                                 </div>
                             </div>
