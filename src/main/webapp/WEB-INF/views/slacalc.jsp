@@ -105,7 +105,7 @@
                                 </div>
                                 <div>
                                     <button type="button" class="btn btn-block btn-outline-primary" id="range_calc">
-                                        Calculate1
+                                        Calculate
                                     </button>
                                 </div>
                             </div>
@@ -117,7 +117,7 @@
                             <div class = "card-body">
                                 <dl class = "row">
                                     <dt class="col-sm-6" style="font-size:15px">Down Time (Min)</dt>
-                                    <dd class="col-sm-6" id="downtime1"></dd>
+                                    <dd class="col-sm-6" id="downtime"></dd>
                                     <dt class="col-sm-6"style="font-size:15px">Available Minutes</dt>
                                     <dd class="col-sm-6" id="availtime"></dd>
                                     <dt class="col-sm-6"style="font-size:15px">Uptime Minutes<br>

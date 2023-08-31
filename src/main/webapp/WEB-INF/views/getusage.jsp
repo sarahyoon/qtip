@@ -342,8 +342,7 @@
 <script src="/resources/plugins/bs-stepper/js/bs-stepper.min.js"></script>
 <!-- AdminLTE App -->
 <script src="/resources/dist/js/adminlte.min.js"></script>
-<!-- AdminLTE for demo purposes -->
-<script src="/resources/dist/js/demo.js"></script>
+
 <!--Chips -->
 <%--<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>--%>
 
@@ -360,6 +359,7 @@
         "ProductId1", "SKUName", "UnitOfMeasure1", "ConsumptionQuantityPerUnit", "MocpResourcesPerUnit", "IsMonetaryCommitmentService1", "SoldService", "ServiceTier", "UnitOfMeasureUCDD"];
 
     var column_list_checked=["Date","SubscriptionGuid","MeterCategory","MeterName","ResourceId", "AdditionalInfo","IsActualCost", "IsAmortizedCost","ChargeTypeInternal", "BenefitName"];
+    var field_list = ["SubscriptionGuid","MeterCategory","MeterName","ResourceId", "AdditionalInfo","ChargeTypeInternal", "BenefitName"];
 
     var meterCategory_list=["Unassigned","All","Compute","Storage","SQL","CDN","Service Bus","Access Control","Cache","SQL Reporting","VPN Gateway","Media","Media Services","Backup","Virtual Machines","Virtual Machines Licenses",
         "Cloud Services","BizTalk Services","Integration","Azure App Service","Multi-Factor Authentication","Data Management","Mobile Services","Notification Hubs","Scheduler","Identity","Visual Studio","Networking","HDInsight","Websites",
@@ -378,11 +378,11 @@
         "Visual Studio Codespaces","Azure Policy","Azure SQL Edge","Azure Resource Mover","MS Bing Services","Network Traversal","Voice","Chat","GHEM","AKS on Azure Stack HCI","Azure Purview","Quantum Computing","Microsoft Graph data connect",
         "Azure Managed Instance for Apache Cassandra","Azure Percept","Test Base","Azure Route Server","Web PubSub","GitHub AE","Azure Defender","CVP-101","Azure WVD Promo","Intelligent Recommendations","Windows Virtual Desktop","Fraud Protection",
         "Business Applications Embedded","Azure HPC Workbench","Azure Applied AI Services","Dataverse","Power Platform Request","Power Apps","Microsoft Graph Services","Azure Chaos Studio","Azure Container Apps","Azure Load Testing",
-        "Microsoft Azure Payment HSM","Hybrid Data Services","Azure Fluid Relay","Azure Grafana Service","Project Caspian","Power Automate","Azure confidential ledger","Email","Syntex","Microsoft Dev Box","Azure Orbital Edge",
+        "Microsoft Azure Payment HSM","Hybrid Data Services","Azure Fluid Relay","Azure Grafana Service","Project Caspian","Power Automate","Azure confidential ledger","Syntex","Microsoft Dev Box","Azure Orbital Edge",
         "Microsoft Playwright Testing","Packet Core","Power Pages","Azure Arc-enabled AKS","Energy Data Manager","Analytics","Azure Singularity","Voice Core","AKS Edge Essentials","AI Ops","Update Management","Microsoft Fabric",
         "Azure Modeling and Simulation Workbench","Routing","Messaging","Phone Numbers","Azure Operator Nexus","Import / Export","Visual Studio Team Services",
-        "Application Dependency Monitor","SQL StreamInsight","ExpressRoute (IXP)","All Services","ExpressRoute (Carrier)","HockeyApp","Test Cloud","MySQL Database on Azure","CurrencyWithTC:LOCALCLOUD","Domains","Microsoft IoT Central",
-        "Azure Container Service","Database Compute Unit","CurrencyWithTC:APSnoDLoutofstate","Web Sites","CurrencyWithTC:PhoneSupportServices","Cloud Connection Service","Visual Studio Connected Environment","Sonar DaaS","Software Pre Pay",
+        "Application Dependency Monitor","SQL StreamInsight","ExpressRoute (IXP)","All Services","ExpressRoute (Carrier)","HockeyApp","Test Cloud","MySQL Database on Azure","Domains","Microsoft IoT Central",
+        "Azure Container Service","Database Compute Unit","Web Sites","Cloud Connection Service","Visual Studio Connected Environment","Sonar DaaS","Software Pre Pay",
         "Machine Learning Services","Cosmos DB","Arcadia","Azure Arcadia Analytics","Bing ObjectStore","Footprint","Falcon Compute","SAP Embrace","SMS","Test Service","Azure Modular Data Center","Calling","Azure Usage Billing",
         "Cosmic","RoundingAdjustment","Azure Code Scanning","Azure","Virtual Machine Licenses"];
 
@@ -446,7 +446,7 @@
             document.querySelector('.select2bs4').append(option);
         });
 
-        var list = column_list_checked.concat(colunms_list);
+        var list = field_list.concat(colunms_list);
 
         list.forEach(function (data){
             var option = document.createElement('option');
