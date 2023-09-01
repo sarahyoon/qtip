@@ -54,12 +54,36 @@ public class queryBuilder {
             }
         }
 
+        //Add Options
         List<Map<String, String>> ops = info.getOperations();
-        System.out.println(ops.get(0).get("field"));
+        if(ops.size() == 1 && "".equals(ops.get(0).get("val"))){
+            query+="";
+        }
 
+        if(ops.size()>0 && ops.get(0).get("val") != ""){
+            query += "<br> | where ";
 
-        query += "<br> | summarize Quantity = sum(Quantity), sum(Cost) by Date,SubscriptionGuid,MeterCategory,MeterName,ResourceId,AdditionalInfo,ChargeTypeInternal";
+            for(int i=0;i<ops.size();i++){
+                if(i==0){
+                    query+= ops.get(i).get("field") + " " + ops.get(i).get("ops") + " \"" + ops.get(i).get("val") + "\"";
+                }
+                else{
+                    query+= "<br> | " + ops.get(i).get("clause") + " " + ops.get(i).get("field") + " " + ops.get(i).get("ops") + " \"" + ops.get(i).get("val") + "\"";
+                }
 
+            }
+        }
+
+        query += "<br> | summarize Quantity = sum(Quantity), sum(Cost) by ";
+
+        List<String> cols = info.getColumns();
+        for(int i=0;i<cols.size();i++){
+            if(i==cols.size()-1){
+                query+= " " + cols.get(i);
+            }else{
+                query+= " " + cols.get(i) + ",";
+            }
+        }
 
         System.out.println(query);
 

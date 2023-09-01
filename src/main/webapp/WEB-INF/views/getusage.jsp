@@ -258,10 +258,6 @@
                                                                     <i class="fa fa-plus" style="color:mediumblue;"></i>
                                                                 </div>
                                                                 <div class="col-sm-1">
-                                                                    <select class="clause form-control">
-                                                                        <option>And</option>
-                                                                        <option>Or</option>
-                                                                    </select>
                                                                 </div>
                                                                 <div class="col-sm-2">
                                                                     <select class="field_select form-control"></select>
@@ -350,13 +346,12 @@
 
     var colunms_list = ["Provider",  "BillingMonth", "ConsumedService", "Cost", "CostCenter", "EffectivePrice", "EnrollmentNumber", "IsMonetaryCommitmentService", "MeterId", "OfferId",
         "OfferName", "OrderNumber", "PartnerId", "PartNumber", "PlanId", "PlanName", "ProductId", "ProductOrderId", "ProductOrderName", "PublisherId", "PublisherName", "BenefitId", "Quantity",
-        "RatingAssetId", "ReservationId", "ReservationName", "ResourceGroup", "ResourceGuid", "ResourceLocation", "ResourceLocationId", "ResourceName", "ResourceType",
-        "ServiceInfo1", "ServiceInfo2", "Tags", "UnitOfMeasure", "UnitPrice", "UnitPriceScaled",  "ChargeType",
-        "PublisherType", "Frequency", "ChargeTypeInternal", "UnitPriceUSD", "UnitPriceScaledUSD", "PayGPrice", "PayGPriceUSD", "BCtoUSDExchangeRate", "ResourceLocationAZ", "Currency", "Operation",
-        "PriceModel", "OfferingClass", "ReservationUpFrontValue", "TermUnit", "CostType", "MeterResourceId", "Provider1", "MeterId1", "ProductName", "MeterGuid",  "MeterSubCategory", "MeterRegion",
-        "ProductId1", "SKUName", "UnitOfMeasure1", "ConsumptionQuantityPerUnit", "MocpResourcesPerUnit", "IsMonetaryCommitmentService1", "SoldService", "ServiceTier", "UnitOfMeasureUCDD"];
+        "ReservationId", "ReservationName", "ResourceGroup", "ResourceGuid", "ResourceLocation", "ResourceName", "ResourceType", "Tags", "UnitOfMeasure", "UnitPrice",
+        "ChargeType", "PublisherType", "Frequency", "ChargeTypeInternal", "UnitPriceUSD", "UnitPriceScaled", "PayGPrice", "PayGPriceUSD", "Currency", "PriceModel", "ReservationUpFrontValue",
+        "TermUnit", "CostType", "MeterResourceId", "ProductName", "MeterGuid", "MeterSubCategory", "MeterRegion", "UnitOfMeasure1", "IsMonetaryCommitmentService1",
+        "ServiceTier", "UnitOfMeasureUCDD"];
 
-    var column_list_checked=["Date","SubscriptionGuid","MeterCategory","MeterName","ResourceId", "AdditionalInfo","IsActualCost", "IsAmortizedCost","ChargeTypeInternal", "BenefitName"];
+    var column_list_checked=["Date","SubscriptionGuid","MeterCategory","MeterSubCategory", "MeterName","ResourceId", "AdditionalInfo","ChargeType","ChargeTypeInternal", "EffectivePrice"];
     var field_list = ["SubscriptionGuid","MeterCategory","MeterName","ResourceId", "AdditionalInfo","ChargeTypeInternal", "BenefitName"];
 
     var meterCategory_list=["Unassigned","All","Compute","Storage","SQL","CDN","Service Bus","Access Control","Cache","SQL Reporting","VPN Gateway","Media","Media Services","Backup","Virtual Machines","Virtual Machines Licenses",
@@ -373,15 +368,15 @@
         "Azure Bastion","Azure Data Share","HPCCache","Sentinel","SQL DB Edge","Visual Studio Online","GitHub","Azure Spring Cloud","Mixed Reality","Azure Firewall Manager","Microsoft Azure Peering Service","Azure Synthetics","Azure Machine Learning",
         "Azure API for FHIR","Azure Stack Hub","Azure Stack Edge","Microsoft Azure Internet Analyzer","Azure Remote Rendering","Gov Consumption","App Configuration","Private Mobile Network","Azure Synapse Analytics","Azure Cognitive Search",
         "Azure Kubernetes Service","Azure VM Image Builder","Azure Stack HCI","Azure IoT Security","Azure Orbital","Azure Arc","LogicApps","Azure Arc Enabled Databases","HPC Cache","SQL Managed Instance","Azure Active Directory for External Identities",
-        "Visual Studio Codespaces","Azure Policy","Azure SQL Edge","Azure Resource Mover","MS Bing Services","Network Traversal","Voice","Chat","GHEM","AKS on Azure Stack HCI","Azure Purview","Quantum Computing","Microsoft Graph data connect",
-        "Azure Managed Instance for Apache Cassandra","Azure Percept","Test Base","Azure Route Server","Web PubSub","GitHub AE","Azure Defender","CVP-101","Azure WVD Promo","Intelligent Recommendations","Windows Virtual Desktop","Fraud Protection",
+        "Visual Studio Codespaces","Azure Policy","Azure SQL Edge","Azure Resource Mover","MS Bing Services","Network Traversal","GHEM","AKS on Azure Stack HCI","Azure Purview","Quantum Computing","Microsoft Graph data connect",
+        "Azure Managed Instance for Apache Cassandra","Azure Percept","Azure Route Server","Web PubSub","GitHub AE","Azure Defender","Azure WVD Promo","Intelligent Recommendations","Windows Virtual Desktop","Fraud Protection",
         "Business Applications Embedded","Azure HPC Workbench","Azure Applied AI Services","Dataverse","Power Platform Request","Power Apps","Microsoft Graph Services","Azure Chaos Studio","Azure Container Apps","Azure Load Testing",
         "Microsoft Azure Payment HSM","Hybrid Data Services","Azure Fluid Relay","Azure Grafana Service","Project Caspian","Power Automate","Azure confidential ledger","Syntex","Microsoft Dev Box","Azure Orbital Edge",
         "Microsoft Playwright Testing","Azure Arc-enabled AKS","Energy Data Manager","Analytics","Azure Singularity","Voice Core","AKS Edge Essentials","AI Ops","Update Management","Microsoft Fabric",
-        "Azure Modeling and Simulation Workbench","Routing","Messaging","Phone Numbers","Azure Operator Nexus","Import / Export","Visual Studio Team Services",
-        "Application Dependency Monitor","SQL StreamInsight","ExpressRoute (IXP)","All Services","ExpressRoute (Carrier)","HockeyApp","Test Cloud","MySQL Database on Azure","Domains","Microsoft IoT Central",
+        "Azure Modeling and Simulation Workbench","Routing","Phone Numbers","Azure Operator Nexus","Import / Export","Visual Studio Team Services",
+        "Application Dependency Monitor","SQL StreamInsight","ExpressRoute (IXP)","All Services","ExpressRoute (Carrier)","MySQL Database on Azure","Domains","Microsoft IoT Central",
         "Azure Container Service","Database Compute Unit","Web Sites","Cloud Connection Service","Visual Studio Connected Environment","Sonar DaaS","Software Pre Pay",
-        "Machine Learning Services","Cosmos DB","Arcadia","Azure Arcadia Analytics","Bing ObjectStore","Footprint","Falcon Compute","SAP Embrace","SMS","Test Service","Azure Modular Data Center","Calling","Azure Usage Billing",
+        "Machine Learning Services","Cosmos DB","Arcadia","Azure Arcadia Analytics","Bing ObjectStore","Footprint","Falcon Compute","SAP Embrace","Azure Modular Data Center","Azure Usage Billing",
         "Cosmic","RoundingAdjustment","Azure Code Scanning","Azure","Virtual Machine Licenses"];
 
     $(function () {
@@ -423,7 +418,6 @@
 
         });
 
-
         column_list_checked.forEach(function(data){
             const template= "<div class=\"form-check\">"+
                 "<input class=\"form-check-input\" type=\"checkbox\" checked> " +
@@ -460,7 +454,6 @@
             document.querySelector('.field_select').append(option);
         });
 
-
         $(document).on('click', '.fa-plus', function (e){
             var html =  "<li><div class=\"form-group\"><div class=\"row\"><div style=\"width:60px\">" +
                 "<div> <i class=\"fa fa-plus\" style=\"color:#7f7ff8\"></i>" +
@@ -481,7 +474,7 @@
         });
 
         $(document).on('click', '.fa-minus', function (e){
-            p = this.parentElement.parentElement.parentElement;
+            p = this.closest('li');
             p.remove(this);
         });
 
