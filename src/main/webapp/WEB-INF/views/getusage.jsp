@@ -281,7 +281,7 @@
                                                                     </select>
                                                                 </div>
                                                                 <div class="col-sm-4">
-                                                                    <input type="text" class="value form-control"/>
+                                                                    <input type="text" class="value form-control" name="valuein" onkeyup="valueIn(this)"/>
                                                                 </div>
                                                             </div>
                                                             <div class="isAttach" style="display:none;">N</div>
@@ -352,7 +352,7 @@
 
 <!-- Page specific script -->
 <script>
-    var chips_num = 1;
+
 
     var enroll_num;
 
@@ -364,7 +364,7 @@
         "ServiceTier", "UnitOfMeasureUCDD"];
 
     var column_list_checked=["Date","SubscriptionGuid","MeterCategory","MeterSubCategory", "MeterName","ResourceId", "AdditionalInfo","ChargeType","ChargeTypeInternal", "EffectivePrice"];
-    var field_list = ["SubscriptionGuid","MeterCategory","MeterName","ResourceId", "AdditionalInfo","ChargeTypeInternal", "BenefitName"];
+    var field_list = ["MeterCategory","MeterName","ResourceId", "AdditionalInfo","ChargeTypeInternal", "BenefitName"];
 
     var meterCategory_list=["Unassigned","All","Compute","Storage","SQL","CDN","Service Bus","Access Control","Cache","SQL Reporting","VPN Gateway","Media","Media Services","Backup","Virtual Machines","Virtual Machines Licenses",
         "Cloud Services","BizTalk Services","Integration","Azure App Service","Multi-Factor Authentication","Data Management","Mobile Services","Notification Hubs","Scheduler","Identity","Visual Studio","Networking","HDInsight","Websites",
@@ -450,16 +450,33 @@
         });
 
         $('#addSubs_btn').click(function() {
-
+            var chips_num = 1;
             var subscription_id = $("#add_subs").val();
-            var html = "";
-            html += "<div class=\"chip\" id=\"ch" + chips_num + "\">";
-            html += subscription_id;
-            html += "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none'\">&times;</span>";
-            html += "</div>"
 
-            $("#chips_area").append(html);
-            chips_num++;
+            if(subscription_id.indexOf(',') > 0){
+
+                var list = subscription_id.split(',');
+                for(var i in list){
+                    var html = "";
+                    html += "<div class=\"chip\" id=\"ch" + chips_num + "\">";
+                    html += list[i].trim();
+                    html += "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none'\">&times;</span>";
+                    html += "</div>"
+                    $("#chips_area").append(html);
+                    chips_num++;
+                }
+
+            }
+            else{
+                var html = "";
+                html += "<div class=\"chip\" id=\"ch" + chips_num + "\">";
+                html += subscription_id;
+                html += "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none'\">&times;</span>";
+                html += "</div>"
+
+                $("#chips_area").append(html);
+                chips_num++;
+            }
 
             $("#add_subs").val('');
 
@@ -507,9 +524,9 @@
                        "<i class=\"fa fa-minus\" style=\"color:red; margin-left:20px\"></i></div></div>" +
                 "<div class=\"col-sm-1\"> <select class=\"clause form-control\"><option>And</option><option>Or</option></select></div>"+
                 "<div class=\"col-sm-2\"> <select class=\"field_select form-control\" onchange=\"isRId(this)\"></select> </div>"+
-                "<div class=\"operator col-sp-1\"> <select class=\"ops form-control\"> <option>==</option> <option>!=</option> "+
+                "<div class=\"operator col-sp-1\"> <select class=\"ops form-control\"><option>==</option> <option>!=</option> "+
                 "<option>contains</option> <option>does not contain</option></select> </div>"+
-                "<div class=\"col-sm-4\"> <input type=\"text\" class=\"value form-control\"/> </div></div>" +
+                "<div class=\"col-sm-4\"> <input type=\"text\" class=\"value form-control\" name=\"valuein\" onkeyup=\"valueIn(this)\"/> </div></div>" +
                 "<div class=\"isAttach\" style=\"display:none;\">N</div></div></li>";
 
             $('.options').find('ul').append(html);
@@ -713,7 +730,7 @@
             $(this).bootstrapSwitch('state', $(this).prop('checked'));
         });
 
-        // $('.value').on("propertychange change keyup paste input", function() {
+        // $('input[name="valuein"]').on("propertychange change keyup paste input", function() {
         //
         //     html = "<option>in~</option> <option>not in~</option> "+
         //         "<option>has_any</option> <option>not has_any</option>";
@@ -763,6 +780,44 @@
     $(document).on('click', '#upload_cancel', function (e) {
         $(this)[0].parentElement.firstChild.value='';
     });
+
+    function valueIn(obj){
+       var html = "<option>in~</option> <option>not in~</option> "+
+            "<option>has_any</option> <option>not has_any</option>";
+
+        var defaulthtml = "<option>==</option> <option>!=</option> "+
+            "<option>contains</option> <option>does not contain</option>";
+
+        var currentVal = $(obj).val();
+        var optionsParent = $(obj)[0].parentNode.parentNode;
+        if(currentVal.endsWith(",")){
+
+            if(optionsParent.childNodes.length > 5){
+                optionsParent.childNodes[7].childNodes[1].innerHTML = html;
+            }
+            else{
+                optionsParent.childNodes[3].childNodes[1].innerHTML = html;
+            }
+        }
+
+       else if(currentVal.split(",").length > 1){
+            if(optionsParent.childNodes.length > 5){
+                optionsParent.childNodes[7].childNodes[1].innerHTML = html;
+            }
+            else{
+                optionsParent.childNodes[3].childNodes[1].innerHTML = html;
+            }
+        }
+
+        else{
+            if(optionsParent.childNodes.length > 5){
+                optionsParent.childNodes[7].childNodes[1].innerHTML = defaulthtml;
+            }
+            else{
+                optionsParent.childNodes[3].childNodes[1].innerHTML = defaulthtml;
+            }
+        }
+    }
 
 
 </script>
