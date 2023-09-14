@@ -242,7 +242,7 @@
                                                                 <label></label>
                                                             </div>
                                                             <div class="col-sm-1">
-                                                                <label>And/Or</label>
+                                                                <label>and/or</label>
                                                             </div>
                                                             <div class="col-sm-2">
                                                                 <label>Field</label>
@@ -529,7 +529,7 @@
             var html =  "<li><div class=\"form-group\"><div class=\"row\"><div style=\"width:60px\">" +
                 "<div> <i class=\"fa fa-plus\" style=\"color:#7f7ff8\"></i>" +
                        "<i class=\"fa fa-minus\" style=\"color:red; margin-left:20px\"></i></div></div>" +
-                "<div class=\"col-sm-1\"> <select class=\"clause form-control\"><option>And</option><option>Or</option></select></div>"+
+                "<div class=\"col-sm-1\"> <select class=\"clause form-control\"><option>and</option><option>or</option></select></div>"+
                 "<div class=\"col-sm-2\"> <select class=\"field_select form-control\" onchange=\"isRId(this)\"></select> </div>"+
                 "<div class=\"operator col-sp-1\"> <select class=\"ops form-control\"><option>==</option> <option>!=</option> "+
                 "<option>contains</option> <option>does not contain</option></select> </div>"+

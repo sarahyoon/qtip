@@ -77,7 +77,7 @@ public class queryBuilder {
                     query+= ops.get(i).get("field") + " " + ops.get(i).get("ops")  + "(" +  setVals + ")";
                 }
                 else{
-                    query+= "<br> | " + ops.get(i).get("clause") + " " + ops.get(i).get("field") + " " + ops.get(i).get("ops") + "(" +  setVals + ")";
+                    query+= "<br>" + ops.get(i).get("clause") + " " + ops.get(i).get("field") + " " + ops.get(i).get("ops") + "(" +  setVals + ")";
                 }
 
             }
