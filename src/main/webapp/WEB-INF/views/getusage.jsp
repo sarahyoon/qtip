@@ -210,7 +210,7 @@
                                                 <div id="chips_area">
                                                     <div class="chip" id="all_chip">
                                                         All
-                                                        <span class="closebtn" onclick="this.parentElement.style.display='none'" >&times;</span>
+                                                        <span class="closebtn" onclick="removeChip(this)" >&times;</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -451,36 +451,42 @@
         });
 
         $('#addSubs_btn').click(function() {
+
+
             var chips_num = 1;
             var subscription_id = $("#add_subs").val();
 
-            if(subscription_id.indexOf(',') > 0){
+            if(subscription_id.length <= 0){
+                alert("Please Input subscriptionGUID");
+            }
+            else{
+                $('#all_chip').remove();
+                if(subscription_id.indexOf(',') > 0){
 
-                var list = subscription_id.split(',');
-                for(var i in list){
+                    var list = subscription_id.split(',');
+                    for(var i in list){
+                        var html = "";
+                        html += "<div class=\"chip\" id=\"ch" + chips_num + "\">";
+                        html += list[i].trim();
+                        html += "<span class=\"closebtn\" onclick=\"removeChip(this)\">&times;</span>";
+                        html += "</div>"
+                        $("#chips_area").append(html);
+                        chips_num++;
+                    }
+
+                }
+                else{
                     var html = "";
                     html += "<div class=\"chip\" id=\"ch" + chips_num + "\">";
-                    html += list[i].trim();
-                    html += "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none'\">&times;</span>";
+                    html += subscription_id;
+                    html += "<span class=\"closebtn\" onclick=\"removeChip(this)\">&times;</span>";
                     html += "</div>"
+
                     $("#chips_area").append(html);
                     chips_num++;
                 }
-
             }
-            else{
-                var html = "";
-                html += "<div class=\"chip\" id=\"ch" + chips_num + "\">";
-                html += subscription_id;
-                html += "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none'\">&times;</span>";
-                html += "</div>"
-
-                $("#chips_area").append(html);
-                chips_num++;
-            }
-
             $("#add_subs").val('');
-
         });
 
         column_list_checked.forEach(function(data){
@@ -570,14 +576,19 @@
                 var subs = document.querySelector('#chips_area').children;
                 var subs_num = subs.length;
                 var s ;
-                if(subs_num>1){
-                    for(var i=1;i<subs_num;i++){
+
+                if(subs_num == 1){
+                    s = subs[0].innerText.slice(0, -2);
+                    subsList.push(s);
+                }
+                else if(subs_num>1) {
+                    for (var i = 0; i < subs_num; i++) {
                         s = subs[i].innerText.slice(0, -2);
                         subsList.push(s);
                     }
-                }else{
-                    s = subs[0].innerText.slice(0, -2);
-                    subsList.push(s);
+                }
+                else{
+                    subsList.push("All");
                 }
             }
             else{
@@ -750,6 +761,11 @@
     document.addEventListener('DOMContentLoaded', function () {
         window.stepper = new Stepper(document.querySelector('.bs-stepper'))
     });
+
+    function removeChip(obj){
+        $(obj)[0].parentNode.remove();
+    }
+
 
     function isRId(obj){
         var html = '';

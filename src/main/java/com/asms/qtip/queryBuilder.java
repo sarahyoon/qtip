@@ -26,6 +26,7 @@ public class queryBuilder {
         List<String> list = info.getSubIds();
         if(!list.get(0).equals("All")){
             query += "<br> | where SubscriptionGuid in~ (";
+
             for(int i=0;i<list.size();i++){
 
                 if(i == list.size()-1){
