@@ -10,7 +10,7 @@ public class queryBuilder {
 
     public String getUsageQuery(InfoDO info) throws ParseException {
 
-        String query = "GetUCDDAMPAWSv2(XXXXXXXX,";
+        String query = "GetUCDDAMPAWSv2("+ info.getEnrollNum()+",";
         query += "datetime("+ info.getStartDate() +"),datetime(" + info.getEndDate() + "))";
 
         //CostType
@@ -55,20 +55,20 @@ public class queryBuilder {
         }
 
         //Add Options
-        List<Map<String, String>> ops = info.getOperations();
+        List<Map<String, Object>> ops = info.getOperations();
         if(ops.size() == 1 && "".equals(ops.get(0).get("val"))){
             query+="";
         }
 
-        if(ops.size()>0 && ops.get(0).get("val") != ""){
+        if(ops.size()>=1){
             query += "<br> | where ";
 
             for(int i=0;i<ops.size();i++){
                 if(i==0){
-                    query+= ops.get(i).get("field") + " " + ops.get(i).get("ops") + " \"" + ops.get(i).get("val") + "\"";
+                    query+= ops.get(i).get("field") + " " + ops.get(i).get("ops")  + ops.get(i).get("val") ;
                 }
                 else{
-                    query+= "<br> | " + ops.get(i).get("clause") + " " + ops.get(i).get("field") + " " + ops.get(i).get("ops") + " \"" + ops.get(i).get("val") + "\"";
+                    query+= "<br> | " + ops.get(i).get("clause") + " " + ops.get(i).get("field") + " " + ops.get(i).get("ops") +  ops.get(i).get("val") ;
                 }
 
             }
@@ -84,8 +84,6 @@ public class queryBuilder {
                 query+= " " + cols.get(i) + ",";
             }
         }
-
-        System.out.println(query);
 
         return query;
     }

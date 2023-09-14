@@ -1,11 +1,14 @@
 package com.asms.qtip;
 
-import org.apache.tomcat.util.json.JSONParser;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.tomcat.util.json.ParseException;
-import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,41 +28,61 @@ public class mainController {
 
     @ResponseBody
     @RequestMapping(value="/getusage", method={RequestMethod.POST, RequestMethod.GET})
-    public Map<String, String> getQuery(@RequestParam Map<String, Object> map) throws ParseException {
+    public Map<String, String> getQuery( @RequestPart(value="files", required=true) List<MultipartFile> file,
+                                         @RequestPart(value="infos", required=true) Map<String, Object> map, HttpServletRequest request) throws ParseException, IOException {
+
             queryBuilder qb = new queryBuilder();
             InfoDO infos = new InfoDO();
 
-            Object sb = map.get("subIds");
-            JSONParser parser = new JSONParser(sb.toString());
-            Object subs = parser.parse();
 
-            Object cs = map.get("columns");
-            JSONParser parser1 = new JSONParser(cs.toString());
-            Object cols = parser1.parse();
-
-            Object mc = map.get("meterCategory");
-            JSONParser parser2 = new JSONParser(mc.toString());
-            Object meters = parser2.parse();
-
-            Object ops = map.get("operations");
-            JSONParser parser3 = new JSONParser(ops.toString());
-            Object oper = parser3.parse();
-
-//            JSONParser parser4 = new JSONParser(oper.toString());
-//            Object clause = parser4.parse();
+            if(map.get("enrollNum") == null){
+                infos.setEnrollNum("Input Enrollment # HERE");
+            }
+            else {
+                infos.setEnrollNum((String) map.get("enrollNum"));
+            }
 
             infos.setStartDate((String) map.get("startDate"));
             infos.setEndDate((String) map.get("endDate"));
             infos.setCostType((String) map.get("costType"));
-            infos.setSubIds((List<String>) subs);
-            infos.setColumns((List<String>) cols);
-            infos.setMeterCategory((List<String>) meters);
-            infos.setOperations((List<Map<String, String>>) oper);
+            infos.setSubIds((List<String>) map.get("subIds"));
+            infos.setColumns((List<String>) map.get("columns"));
+            infos.setMeterCategory((List<String>) map.get("meterCategory"));
+            infos.setOperations(operationsEditor(map.get("operations"),file));
 
             String query = qb.getUsageQuery(infos);
             System.out.println(query);
             Map<String, String> result = new HashMap<>();
             result.put("query", query);
             return result;
+    }
+
+    public List<Map<String, Object>> operationsEditor (Object map, List<MultipartFile> file) throws IOException {
+
+        List<Map<String, Object>> ops = (List<Map<String, Object>>) map;
+        int getAttach = 0;
+        for(int i=0;i<ops.size();i++){
+
+            String isAttach = (String) ops.get(i).get("val");
+
+            if("UP".equals(isAttach)){
+                InputStreamReader isr = new InputStreamReader(file.get(getAttach++).getInputStream());
+                BufferedReader br = new BufferedReader(isr);
+
+                String str = "";
+                String mvals = "";
+
+                try{
+                    while((str = br.readLine()) != null){
+                        mvals += "\"" + str + "\",";
+                    }
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+                ops.get(i).put("val", mvals.substring(0, mvals.length()-1));
+            }
+
+        }
+        return ops;
     }
 }

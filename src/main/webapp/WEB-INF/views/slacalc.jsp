@@ -51,7 +51,7 @@
                         <a href="slacalc" class="nav-link active">
                             <i class="nav-icon fas fa-th"></i>
                             <p>
-                                SLA Calculator
+                                SLA Uptime Calculator
                             </p>
                         </a>
                     </li>

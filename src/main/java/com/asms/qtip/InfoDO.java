@@ -5,14 +5,22 @@ import java.util.Map;
 
 public class InfoDO {
 
+    String enrollNum;
     String startDate;
     String endDate;
     List<String> subIds;
     String costType;
     List<String> columns;
     List<String> meterCategory;
-    List<Map<String, String>> operations;
+    List<Map<String, Object>> operations;
 
+    public String getEnrollNum() {
+        return enrollNum;
+    }
+
+    public void setEnrollNum(String enrollNum) {
+        this.enrollNum = enrollNum;
+    }
     public String getStartDate() {
         return startDate;
     }
@@ -37,7 +45,7 @@ public class InfoDO {
         return meterCategory;
     }
 
-    public List<Map<String, String>> getOperations() {
+    public List<Map<String, Object>> getOperations() {
         return operations;
     }
 
@@ -65,7 +73,7 @@ public class InfoDO {
         this.meterCategory = meterCategory;
     }
 
-    public void setOperations(List<Map<String, String>> operations) {
+    public void setOperations(List<Map<String, Object>> operations) {
         this.operations = operations;
     }
 }

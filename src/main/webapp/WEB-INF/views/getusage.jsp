@@ -104,7 +104,7 @@
                         <a href="slacalc" class="nav-link">
                             <i class="nav-icon fas fa-th"></i>
                             <p>
-                                SLA Calculator
+                                SLA Uptime Calculator
                             </p>
                         </a>
                     </li>
@@ -191,13 +191,21 @@
                                                     <input type="text" class="form-control float-right" id="dateRange">
                                                 </div>
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group" id="sub_area">
                                                 <label>Subscription IDs:</label>
-                                                <div class="input-group mb-2" style="width:350px">
+                                                <div class="input-group mb-2" style="width:650px">
                                                     <input type="text" class="form-control rounded-0" id="add_subs">
                                                     <span class="input-group-append">
                                                             <button type="button" class="btn btn-secondary" id="addSubs_btn">Add</button>
-                                                        </span>
+                                                    </span>
+                                                    <div style="margin-right:10px"></div>
+                                                        <div class="custom-file">
+                                                            <input type="file" id="SubList" class="custom-file-input" style="ime-mode:inactive;" >
+                                                            <label class="custom-file-label" for="SubList" id="sub_name"></label>
+                                                        </div>
+                                                        <button type="button" class="btn btn-block btn-outline-danger btn-sm" style="width:75px;" id="sub_cancel">cancel</button>
+                                                </div>
+                                                <div id="file_sub_List" style="display: none;">
                                                 </div>
                                                 <div id="chips_area">
                                                     <div class="chip" id="all_chip">
@@ -245,6 +253,8 @@
                                                             <div class="col-sm-6">
                                                                 <label>Value</label>
                                                             </div>
+                                                            <div class="col-sp-2">
+                                                            </div>
                                                         </div>
                                                     </li>
                                                 </ul>
@@ -259,10 +269,10 @@
                                                                 </div>
                                                                 <div class="col-sm-1">
                                                                 </div>
-                                                                <div class="col-sm-2">
-                                                                    <select class="field_select form-control"></select>
+                                                                <div class="col-sm-2" >
+                                                                    <select class="field_select form-control" onchange="isRId(this)"></select>
                                                                 </div>
-                                                                <div class="col-sp-1">
+                                                                <div class="operator col-sp-1">
                                                                     <select class="ops form-control">
                                                                         <option>==</option>
                                                                         <option>!=</option>
@@ -270,10 +280,11 @@
                                                                         <option>does not contain</option>
                                                                     </select>
                                                                 </div>
-                                                                <div class="col-sm-6">
-                                                                    <input type="text" class="value form-control"/>
+                                                                <div class="col-sm-4">
+                                                                    <input type="text" class="value form-control" id="values"/>
                                                                 </div>
                                                             </div>
+                                                            <div class="isAttach" style="display:none;">N</div>
                                                         </div>
                                                     </li>
                                                 </ul>
@@ -339,10 +350,11 @@
 <!-- AdminLTE App -->
 <script src="/resources/dist/js/adminlte.min.js"></script>
 
-
 <!-- Page specific script -->
 <script>
     var chips_num = 1;
+
+    var enroll_num;
 
     var colunms_list = ["Provider",  "BillingMonth", "ConsumedService", "Cost", "CostCenter", "EffectivePrice", "EnrollmentNumber", "IsMonetaryCommitmentService", "MeterId", "OfferId",
         "OfferName", "OrderNumber", "PartnerId", "PartNumber", "PlanId", "PlanName", "ProductId", "ProductOrderId", "ProductOrderName", "PublisherId", "PublisherName", "BenefitId", "Quantity",
@@ -379,7 +391,11 @@
         "Machine Learning Services","Cosmos DB","Arcadia","Azure Arcadia Analytics","Bing ObjectStore","Footprint","Falcon Compute","SAP Embrace","Azure Modular Data Center","Azure Usage Billing",
         "Cosmic","RoundingAdjustment","Azure Code Scanning","Azure","Virtual Machine Licenses"];
 
+    var subListFile = "N";
+    var subList;
+
     $(function () {
+
 
         $('.nav-link').on('click', function (){
             $('.nav-link').removeClass('active');
@@ -388,7 +404,7 @@
 
 
         $('#getshard').click(function(){
-            var enroll_num = $('#enroll_num').val();
+            enroll_num = $('#enroll_num').val();
             var html = "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\" id=\"qremove\">&times;</button>"
             html += "GetEAEnrollmentShardMap(en=\"";
             html +=  enroll_num + "\")";
@@ -401,6 +417,37 @@
             document.getElementById("queryforshard").innerText = "";
         });
 
+
+        $('#SubList').on("change", function(e){
+
+            subListFile = "Y";
+
+            var file = $(this)[0].files[0];
+            $('#sub_name')[0].innerText = file.name;
+            $('#chips_area').remove();
+
+            var fr = new FileReader();
+            fr.readAsText(file);
+            fr.onload = () => {
+                //console.log(fr.result);
+                $('#file_sub_List')[0].innerText = fr.result;
+            }
+            e.target.value='';
+
+        });
+
+
+        $('#sub_cancel').click(function(){
+            subListFile="N";
+            $('#sub_name')[0].innerText = '';
+            var html = "<div id=\"chips_area\">";
+            html += "<div class=\"chip\" id=\"all_chip\">";
+            html += "All";
+            html += "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none'\">&times;</span>";
+            html += "</div></div>"
+
+            $('#sub_area').append(html);
+        });
 
         $('#addSubs_btn').click(function() {
 
@@ -459,10 +506,11 @@
                 "<div> <i class=\"fa fa-plus\" style=\"color:#7f7ff8\"></i>" +
                        "<i class=\"fa fa-minus\" style=\"color:red; margin-left:20px\"></i></div></div>" +
                 "<div class=\"col-sm-1\"> <select class=\"clause form-control\"><option>And</option><option>Or</option></select></div>"+
-                "<div class=\"col-sm-2\"> <select class=\"field_select form-control\"></select> </div>"+
-                "<div class=\"col-sp-1\"> <select class=\"ops form-control\"> <option>==</option> <option>!=</option> "+
+                "<div class=\"col-sm-2\"> <select class=\"field_select form-control\" onchange=\"isRId(this)\"></select> </div>"+
+                "<div class=\"operator col-sp-1\"> <select class=\"ops form-control\"> <option>==</option> <option>!=</option> "+
                 "<option>contains</option> <option>does not contain</option></select> </div>"+
-                "<div class=\"col-sm-6\"> <input type=\"text\" class=\"value form-control\"/> </div></div></div></li>";
+                "<div class=\"col-sm-4\"> <input type=\"text\" class=\"value form-control\"/> </div></div>" +
+                "<div class=\"isAttach\" style=\"display:none;\">N</div></div></li>";
 
             $('.options').find('ul').append(html);
 
@@ -498,26 +546,27 @@
 
             console.log(startDate + ", " + endDate);
 
-            //info.startDate = startDate;
-            //info.endDate = endDate;
-
-            //subscription List
             var subsList=[];
-            var subs = document.querySelector('#chips_area').children;
-            var subs_num = subs.length;
-            var s ;
-            if(subs_num>1){
-                for(var i=1;i<subs_num;i++){
-                    s = subs[i].innerText.slice(0, -2);
+
+            if(subListFile=="N"){
+                var subs = document.querySelector('#chips_area').children;
+                var subs_num = subs.length;
+                var s ;
+                if(subs_num>1){
+                    for(var i=1;i<subs_num;i++){
+                        s = subs[i].innerText.slice(0, -2);
+                        subsList.push(s);
+                    }
+                }else{
+                    s = subs[0].innerText.slice(0, -2);
                     subsList.push(s);
                 }
-            }else{
-                s = subs[0].innerText.slice(0, -2);
-                subsList.push(s);
             }
-
-            //console.log(subsList);
-            //info.subsID.push(subList);
+            else{
+                subsList = $('#file_sub_List')[0].innerHTML.split('<br>');
+                subsList.pop();
+                console.log(subsList);
+            }
 
             //cost type
             var costType= $("#costType").val();
@@ -552,41 +601,52 @@
              */
 
             var operations =[];
+            var formData = new FormData();
             $('.options').find('li').each(function(){
 
                 var clause = $(this).find('.clause').val();
                 var field = $(this).find('.field_select').val();
                 var ops = $(this).find('.ops').val();
                 var vals = $(this).find('.value').val();
+                var isAttach = $(this).find('.isAttach')[0].innerHTML;
 
                 var data = new Object();
-
                 data.clause = clause;
                 data.field = field;
                 data.ops = ops;
-                data.val = vals;
 
+                if(isAttach == 'Y'){
+
+                    var file = $(this).find('.file_upload')[0].files[0];
+                    data.val = "UP";
+                    formData.append("files", file);
+                }
+                else{
+                    data.val = vals;
+                }
                 operations.push(data);
-
             });
 
-            //info.operations = operations;
+            const obj = new Object();
+            obj.enrollNum = enroll_num;
+            obj.startDate = startDate;
+            obj.endDate = endDate;
+            obj.subIds = subsList;
+            obj.costType = costType;
+            obj.columns = columns;
+            obj.meterCategory = meter_category;
+            obj.operations = operations;
 
-            var infos = {
-                startDate: startDate,
-                endDate: endDate,
-                subIds: JSON.stringify(subsList),
-                costType: costType,
-                columns: JSON.stringify(columns),
-                meterCategory: JSON.stringify(meter_category),
-                operations: JSON.stringify(operations)
-            }
+            const blob = new Blob([JSON.stringify(obj)], {type:'application/json'});
+            formData.append('infos', blob);
+
 
             $.ajax({
                 type:'post',
                 url:'getusage',
-                data: infos,
-                dataType: "json",
+                data: formData,
+                processData: false,
+                contentType: false,
                 success:function(data){
                     console.log(data.query);
                     $('#results').append(data.query);
@@ -651,14 +711,58 @@
 
         $("input[data-bootstrap-switch]").each(function(){
             $(this).bootstrapSwitch('state', $(this).prop('checked'));
-        })
+        });
 
+        // $('#values').on("propertychange change keyup paste input", function() {
+        //
+        //     html = "<select class=\"ops form-control\"><option>in~</option> <option>not in~</option> "+
+        //         "<option>has_any</option> <option>not has_any</option></select>";
+        //
+        //     var currentVal = $(this).val();
+        //     if(currentVal.endsWith(",")){
+        //
+        //     }
+        //
+        // });
 
 
     });
+
+
     // BS-Stepper Init
     document.addEventListener('DOMContentLoaded', function () {
         window.stepper = new Stepper(document.querySelector('.bs-stepper'))
+    });
+
+    function isRId(obj){
+        var html = '';
+        var selected = $(obj).val();
+        var isAttached = obj.closest('.form-group').lastElementChild;
+
+        if(selected == "ResourceId" || selected =="ResourceName" || selected =="ProductOrderId" || selected =="AdditionalInfo"){
+
+            if(isAttached.innerHTML == "N"){
+                html += "<div class = \"up\">";
+                html += "<input type=\"file\" class= \"file_upload\" id=\"uploadFile\" style=\"ime-mode:inactive;\" >";
+                html += "<label for=\"uploadFile\"></label>";
+                html += "<button type=\"button\" id=\"upload_cancel\">cancel</button></div>";
+
+                isAttached.innerHTML = 'Y'
+                obj.closest('.row').insertAdjacentHTML('beforeend',html);
+            }
+
+        }
+        else{
+            //파일업로드 있으면
+            if(isAttached.innerText == "Y"){
+                obj.closest('.row').lastChild.remove();
+                isAttached.innerHTML = 'N'
+            }
+        }
+    }
+
+    $(document).on('click', '#upload_cancel', function (e) {
+        $(this)[0].parentElement.firstChild.value='';
     });
 
 
