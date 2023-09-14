@@ -28,7 +28,7 @@ public class mainController {
 
     @ResponseBody
     @RequestMapping(value="/getusage", method={RequestMethod.POST, RequestMethod.GET})
-    public Map<String, String> getQuery( @RequestPart(value="files", required=true) List<MultipartFile> file,
+    public Map<String, String> getQuery( @RequestPart(value="files", required=false) List<MultipartFile> file,
                                          @RequestPart(value="infos", required=true) Map<String, Object> map, HttpServletRequest request) throws ParseException, IOException {
 
             queryBuilder qb = new queryBuilder();

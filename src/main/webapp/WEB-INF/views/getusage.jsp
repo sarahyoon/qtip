@@ -281,7 +281,7 @@
                                                                     </select>
                                                                 </div>
                                                                 <div class="col-sm-4">
-                                                                    <input type="text" class="value form-control" id="values"/>
+                                                                    <input type="text" class="value form-control"/>
                                                                 </div>
                                                             </div>
                                                             <div class="isAttach" style="display:none;">N</div>
@@ -713,16 +713,15 @@
             $(this).bootstrapSwitch('state', $(this).prop('checked'));
         });
 
-        // $('#values').on("propertychange change keyup paste input", function() {
+        // $('.value').on("propertychange change keyup paste input", function() {
         //
-        //     html = "<select class=\"ops form-control\"><option>in~</option> <option>not in~</option> "+
-        //         "<option>has_any</option> <option>not has_any</option></select>";
+        //     html = "<option>in~</option> <option>not in~</option> "+
+        //         "<option>has_any</option> <option>not has_any</option>";
         //
         //     var currentVal = $(this).val();
         //     if(currentVal.endsWith(",")){
-        //
+        //         $(this)[0].parentNode.parentNode.childNodes[7].childNodes[1].innerHTML = html;
         //     }
-        //
         // });
 
 
