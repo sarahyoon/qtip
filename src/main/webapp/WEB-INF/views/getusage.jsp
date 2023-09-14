@@ -447,6 +447,7 @@
             html += "</div></div>"
 
             $('#sub_area').append(html);
+
         });
 
         $('#addSubs_btn').click(function() {

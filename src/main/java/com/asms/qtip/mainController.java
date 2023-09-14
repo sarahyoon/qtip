@@ -74,7 +74,7 @@ public class mainController {
 
                 try{
                     while((str = br.readLine()) != null){
-                        mvals += "\"" + str + "\",";
+                        mvals +=  str + ",";
                     }
                 }catch(Exception e){
                     e.printStackTrace();

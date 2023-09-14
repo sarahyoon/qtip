@@ -56,25 +56,35 @@ public class queryBuilder {
 
         //Add Options
         List<Map<String, Object>> ops = info.getOperations();
-        if(ops.size() == 1 && "".equals(ops.get(0).get("val"))){
-            query+="";
-        }
 
-        if(ops.size()>=1){
+        if(ops.size()>=1 && !"".equals(ops.get(0).get("val"))){
             query += "<br> | where ";
 
             for(int i=0;i<ops.size();i++){
+
+                String[] splitVals = ops.get(i).get("val").toString().split(",");
+                String setVals = "";
+                for(int j=0;j<splitVals.length;j++){
+                    if(j == splitVals.length-1){
+                        setVals += "\"" + splitVals[j]+"\"";
+                    }else{
+                        setVals += "\"" + splitVals[j]+"\",";
+                    }
+                }
+
                 if(i==0){
-                    query+= ops.get(i).get("field") + " " + ops.get(i).get("ops")  + ops.get(i).get("val") ;
+                    query+= ops.get(i).get("field") + " " + ops.get(i).get("ops")  + "(" +  setVals + ")";
                 }
                 else{
-                    query+= "<br> | " + ops.get(i).get("clause") + " " + ops.get(i).get("field") + " " + ops.get(i).get("ops") +  ops.get(i).get("val") ;
+                    query+= "<br> | " + ops.get(i).get("clause") + " " + ops.get(i).get("field") + " " + ops.get(i).get("ops") + "(" +  setVals + ")";
                 }
 
             }
+            query += "<br> | summarize Quantity = sum(Quantity), sum(Cost) by ";
         }
-
-        query += "<br> | summarize Quantity = sum(Quantity), sum(Cost) by ";
+        else{
+            query += "<br> | summarize Quantity = sum(Quantity), sum(Cost) by ";
+        }
 
         List<String> cols = info.getColumns();
         for(int i=0;i<cols.size();i++){
