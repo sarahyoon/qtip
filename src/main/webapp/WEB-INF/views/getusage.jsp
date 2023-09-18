@@ -792,9 +792,6 @@
 
                 isAttached.innerHTML = 'Y'
                 obj.closest('.row').insertAdjacentHTML('beforeend',html);
-
-                //change operator
-                changeOperator(obj);
             }
 
         }
@@ -808,32 +805,30 @@
         }
     }
 
-    // $(document).on('change', '.file_upload', function(e){
-    //     console.log(e.target.closest('.form-group'));
-    //
-    // });
-
     function fileChange(obj){
 
-        //alert("clicked");
-        console.log(obj.closest('.form-group'));
-        var filename = obj.files[0].name;
         var isAttached = obj.closest('.form-group').lastElementChild;
 
-        if(filename){
-            //obj.nextElementSibling.innerHTML = filename;
+        if(obj.files.length>0){
+            obj.parentNode.previousElementSibling.childNodes[1].disabled = true
             isAttached.innerHTML = 'Y';
+            changeOperator(obj);
 
         }else{
-            //obj.nextElementSibling.innerHTML = 'Choose a file';
-            isAttached.innerHTML = 'N';
+            obj.parentNode.previousElementSibling.childNodes[1].disabled = false
+            changeOpsDefault(obj);
         }
 
     }
 
     $(document).on('click', '#upload_cancel', function (e) {
         $(this)[0].parentElement.firstChild.value='';
-        e.target.parentNode.querySelector('label').innerText = 'Choose a file';
+        //able input text
+        e.target.parentNode.previousElementSibling.childNodes[1].disabled = false;
+
+        //change operator
+        var obj = e.target.parentElement.previousSibling.previousSibling.childNodes[1];
+        changeOpsDefault(obj);
     });
 
     function changeOperator(obj){
