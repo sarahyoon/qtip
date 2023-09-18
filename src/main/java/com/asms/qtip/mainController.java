@@ -61,25 +61,26 @@ public class mainController {
 
         List<Map<String, Object>> ops = (List<Map<String, Object>>) map;
         int getAttach = 0;
-        for(int i=0;i<ops.size();i++){
+
+        for (int i = 0; i < ops.size(); i++) {
 
             String isAttach = (String) ops.get(i).get("val");
 
-            if("UP".equals(isAttach)){
+            if ("UP".equals(isAttach)) {
                 InputStreamReader isr = new InputStreamReader(file.get(getAttach++).getInputStream());
                 BufferedReader br = new BufferedReader(isr);
 
                 String str = "";
                 String mvals = "";
 
-                try{
-                    while((str = br.readLine()) != null){
-                        mvals +=  str + ",";
+                try {
+                    while ((str = br.readLine()) != null) {
+                        mvals += str + ",";
                     }
-                }catch(Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
-                ops.get(i).put("val", mvals.substring(0, mvals.length()-1));
+                ops.get(i).put("val", mvals.substring(0, mvals.length() - 1));
             }
 
         }

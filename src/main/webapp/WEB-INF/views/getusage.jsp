@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AdminLTE 3 | Advanced form elements</title>
+    <title>QTip for ASMS</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -70,6 +70,16 @@
         max-width: 13%;
     }
 
+    .file_upload{
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 5px 6px;
+        width:180px
+    }
+    .file_upload::file-selector-button {
+        display: none;
+    }
+
 </style>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
@@ -77,7 +87,7 @@
 <%--    <nav class="main-header navbar navbar-expand navbar-white navbar-light">--%>
         <!-- Left navbar links -->
     <!-- Main Sidebar Container -->
-    <aside class="main-sidebar sidebar-dark-primary elevation-4" style="width:200px">
+    <aside class="main-sidebar sidebar-dark-primary elevation-4" style="width:230px">
         <!-- Sidebar -->
         <div class="sidebar">
             <!-- Sidebar user (optional) -->
@@ -116,7 +126,7 @@
     </aside>
 
     <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper" style="margin-left:205px">
+    <div class="content-wrapper" style="margin-left:230px">
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <div class="container-fluid">
@@ -235,7 +245,7 @@
 
                                             <div class="form-group">
                                                 <label>Add Options</label>
-                                                <ul style="list-style: none">
+                                                <ul style="list-style: none; padding-left:10px">
                                                     <li>
                                                         <div class="row">
                                                             <div style="width:60px">
@@ -252,6 +262,7 @@
                                                             </div>
                                                             <div class="col-sm-6">
                                                                 <label>Value</label>
+                                                                <label style="color:grey; font-weight:400; margin-left:10px" >Please separate values by , (comma)</label>
                                                             </div>
                                                             <div class="col-sp-2">
                                                             </div>
@@ -260,7 +271,7 @@
                                                 </ul>
                                             </div>
                                             <div class="options">
-                                                <ul style="list-style: none">
+                                                <ul style="list-style: none; padding-left:10px">
                                                     <li>
                                                         <div class="form-group">
                                                             <div class="row">
@@ -644,7 +655,8 @@
                 data.field = field;
                 data.ops = ops;
 
-                if(isAttach == 'Y'){
+
+                if(isAttach == 'Y' && $(this).find('.file_upload')[0].files.length>0){
 
                     var file = $(this).find('.file_upload')[0].files[0];
                     data.val = "UP";
@@ -753,7 +765,6 @@
         //     }
         // });
 
-
     });
 
 
@@ -775,13 +786,15 @@
         if(selected == "ResourceId" || selected =="ResourceName" || selected =="ProductOrderId" || selected =="AdditionalInfo"){
 
             if(isAttached.innerHTML == "N"){
-                html += "<div class = \"up\">";
-                html += "<input type=\"file\" class= \"file_upload\" id=\"uploadFile\" style=\"ime-mode:inactive;\" >";
-                html += "<label for=\"uploadFile\"></label>";
-                html += "<button type=\"button\" id=\"upload_cancel\">cancel</button></div>";
+                html += "<div class = \"up\" style=\"display:flex;\">";
+                html += "<input type=\"file\" class= \"file_upload\" id=\"uploadFile\" onchange=\"fileChange(this)\" style=\"ime-mode:inactive;\" >";
+                html += "<button type=\"button\" class=\"btn btn-outline-danger\" id=\"upload_cancel\" style=\"margin-left:7px\">cancel</button></div>";
 
                 isAttached.innerHTML = 'Y'
                 obj.closest('.row').insertAdjacentHTML('beforeend',html);
+
+                //change operator
+                changeOperator(obj);
             }
 
         }
@@ -790,13 +803,68 @@
             if(isAttached.innerText == "Y"){
                 obj.closest('.row').lastChild.remove();
                 isAttached.innerHTML = 'N'
+                changeOpsDefault(obj);
             }
         }
     }
 
+    // $(document).on('change', '.file_upload', function(e){
+    //     console.log(e.target.closest('.form-group'));
+    //
+    // });
+
+    function fileChange(obj){
+
+        //alert("clicked");
+        console.log(obj.closest('.form-group'));
+        var filename = obj.files[0].name;
+        var isAttached = obj.closest('.form-group').lastElementChild;
+
+        if(filename){
+            //obj.nextElementSibling.innerHTML = filename;
+            isAttached.innerHTML = 'Y';
+
+        }else{
+            //obj.nextElementSibling.innerHTML = 'Choose a file';
+            isAttached.innerHTML = 'N';
+        }
+
+    }
+
     $(document).on('click', '#upload_cancel', function (e) {
         $(this)[0].parentElement.firstChild.value='';
+        e.target.parentNode.querySelector('label').innerText = 'Choose a file';
     });
+
+    function changeOperator(obj){
+        var html = "<option>in~</option> <option>not in~</option> "+
+            "<option>has_any</option> <option>not has_any</option>";
+
+        var optionsParent = $(obj)[0].parentNode.parentNode;
+
+        if(optionsParent.childNodes.length > 10){
+            optionsParent.childNodes[7].childNodes[1].innerHTML = html;
+        }
+        else{
+            optionsParent.childNodes[3].childNodes[1].innerHTML = html;
+        }
+
+    }
+
+    function changeOpsDefault(obj){
+        var defaulthtml = "<option>==</option> <option>!=</option> "+
+            "<option>contains</option> <option>does not contain</option>";
+
+        var optionsParent = $(obj)[0].parentNode.parentNode;
+
+        if(optionsParent.childNodes.length > 10){
+            optionsParent.childNodes[7].childNodes[1].innerHTML = defaulthtml;
+        }
+        else{
+            optionsParent.childNodes[3].childNodes[1].innerHTML = defaulthtml;
+        }
+
+    }
 
     function valueIn(obj){
        var html = "<option>in~</option> <option>not in~</option> "+

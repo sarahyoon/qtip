@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AdminLTE 3 | Advanced form elements</title>
+    <title>QTip for ASMS</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -24,7 +24,7 @@
     <%--    <nav class="main-header navbar navbar-expand navbar-white navbar-light">--%>
     <!-- Left navbar links -->
     <!-- Main Sidebar Container -->
-    <aside class="main-sidebar sidebar-dark-primary elevation-4" style="width:200px">
+    <aside class="main-sidebar sidebar-dark-primary elevation-4" style="width:230px">
         <!-- Sidebar -->
         <div class="sidebar">
             <!-- Sidebar user (optional) -->
@@ -63,7 +63,7 @@
     </aside>
 
     <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper" style="margin-left:205px">
+    <div class="content-wrapper" style="margin-left:230px">
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <div class="container-fluid">
@@ -137,7 +137,7 @@
                     <div class="card card-primary">
                         <div class="card-body">
                             <div class="iframe-container">
-                                <iframe class="responsive-iframe" src="/resources/SLA_Aug_2023.htm"></iframe>
+                                <iframe class="responsive-iframe" src="/resources/SLA_Sep_2023.htm"></iframe>
                             </div>
                         </div>
                     </div>
