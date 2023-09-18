@@ -612,22 +612,16 @@
             else{
                 subsList = $('#file_sub_List')[0].innerHTML.split('<br>');
                 subsList.pop();
-                console.log(subsList);
             }
 
             //cost type
             var costType= $("#costType").val();
-            console.log(costType);
-            //info.costType = costType;
 
             //columns list
             var columns = [];
             $('input[type="checkbox"]:checked').each(function(){
                 columns.push($(this)[0].nextElementSibling.innerHTML);
             });
-            columns.pop();
-            console.log(columns);
-            //info.columns = columns;
 
             //meter category
             var meter_category =[];
@@ -636,8 +630,6 @@
                 meter_category.push(cate);
             });
             meter_category.pop();
-            console.log(meter_category);
-            //info.meterCategory = meter_category;
 
             //options
             /**
