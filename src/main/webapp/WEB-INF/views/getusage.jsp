@@ -46,6 +46,14 @@
     .closebtn:hover {
         color: #000;
     }
+
+    /*#guide{*/
+    /*    visibility: hidden;*/
+    /*}*/
+    /*#valueStyle:hover ~ #guide{*/
+    /*    visibility: visible;*/
+    /*}*/
+
     .chip {
         display: inline-block;
         padding: 0 25px;
@@ -192,7 +200,7 @@
                                             <!-- Date range -->
                                             <div class="form-group">
                                                 <label>Date range:</label><br>
-                                                <label>Cross month is not available, yet.</label>
+                                                <label style="font-weight: lighter; color:grey">Cross month is not available, yet.</label>
                                                 <div class="input-group" style="width:350px">
                                                     <div class="input-group-prepend">
                                                     <span class="input-group-text">
@@ -203,7 +211,8 @@
                                                 </div>
                                             </div>
                                             <div class="form-group" id="sub_area">
-                                                <label>Subscription IDs:</label>
+                                                <label>Subscription IDs:</label><br>
+                                                <label style="font-weight: lighter; color:grey">For Attachments, list up line by line in txt file. No comma needed.</label>
                                                 <div class="input-group mb-2" style="width:650px">
                                                     <input type="text" class="form-control rounded-0" id="add_subs">
                                                     <span class="input-group-append">
@@ -263,7 +272,8 @@
                                                             </div>
                                                             <div class="col-sm-6">
                                                                 <label>Value</label>
-                                                                <label style="color:grey; font-weight:400; margin-left:10px" >Please separate values by , (comma)</label>
+                                                                <label id="valueStyle" style="color:grey; font-weight:400; margin-left:10px" >Please separate values by , (comma)</label>
+                                                                <label style="font-weight: lighter; color:grey">For Attachments, list up line by line in txt file. No comma needed.</label>
                                                             </div>
                                                             <div class="col-sp-2">
                                                             </div>
