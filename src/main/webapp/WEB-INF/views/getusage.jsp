@@ -191,7 +191,8 @@
                                         <div id="selectOptions" class="content" role="tabpanel" aria-labelledby="selectOptions-trigger">
                                             <!-- Date range -->
                                             <div class="form-group">
-                                                <label>Date range:</label>
+                                                <label>Date range:</label><br>
+                                                <label>Cross month is not available, yet.</label>
                                                 <div class="input-group" style="width:350px">
                                                     <div class="input-group-prepend">
                                                     <span class="input-group-text">
@@ -404,6 +405,7 @@
 
     var subListFile = "N";
     var subList;
+    var isQueryExist = "N";
 
     $(function () {
 
@@ -415,17 +417,22 @@
 
 
         $('#getshard').click(function(){
-            enroll_num = $('#enroll_num').val();
-            var html = "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\" id=\"qremove\">&times;</button>"
-            html += "GetEAEnrollmentShardMap(en=\"";
-            html +=  enroll_num + "\")";
-            html += "<br />";
-            html += "| project ShardedDatabase";
-            $('#queryforshard').append(html);
+
+            if(isQueryExist == "N"){
+                enroll_num = $('#enroll_num').val();
+                var html = "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\" id=\"qremove\">&times;</button>"
+                html += "GetEAEnrollmentShardMap(en=\"";
+                html +=  enroll_num + "\")";
+                html += "<br />";
+                html += "| project ShardedDatabase";
+                $('#queryforshard').append(html);
+                isQueryExist = "Y";
+            }
         });
 
         $(document).on("click", "#qremove", function(event){
             document.getElementById("queryforshard").innerText = "";
+            isQueryExist = "N";
         });
 
 
