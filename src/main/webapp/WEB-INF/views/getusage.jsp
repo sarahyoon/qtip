@@ -368,8 +368,8 @@
 
     var enroll_num;
 
-    var colunms_list = ["Provider",  "BillingMonth", "ConsumedService", "Cost", "CostCenter", "EffectivePrice", "EnrollmentNumber", "IsMonetaryCommitmentService", "MeterId", "OfferId",
-        "OfferName", "OrderNumber", "PartnerId", "PartNumber", "PlanId", "PlanName", "ProductId", "ProductOrderId", "ProductOrderName", "PublisherId", "PublisherName", "BenefitId", "Quantity",
+    var colunms_list = ["Provider",  "BillingMonth", "ConsumedService", "CostCenter", "EffectivePrice", "EnrollmentNumber", "IsMonetaryCommitmentService", "MeterId", "OfferId",
+        "OfferName", "OrderNumber", "PartnerId", "PartNumber", "PlanId", "PlanName", "ProductId", "ProductOrderId", "ProductOrderName", "PublisherId", "PublisherName", "BenefitId",
         "ReservationId", "ReservationName", "ResourceGroup", "ResourceGuid", "ResourceLocation", "ResourceName", "ResourceType", "Tags", "UnitOfMeasure", "UnitPrice",
         "ChargeType", "PublisherType", "Frequency", "ChargeTypeInternal", "UnitPriceUSD", "UnitPriceScaled", "PayGPrice", "PayGPriceUSD", "Currency", "PriceModel", "ReservationUpFrontValue",
         "TermUnit", "CostType", "MeterResourceId", "ProductName", "MeterGuid", "MeterSubCategory", "MeterRegion", "UnitOfMeasure1", "IsMonetaryCommitmentService1",
