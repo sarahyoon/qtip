@@ -272,7 +272,7 @@
                                                             </div>
                                                             <div class="col-sm-6">
                                                                 <label>Value</label>
-                                                                <label id="valueStyle" style="color:grey; font-weight:400; margin-left:10px" >Please separate values by , (comma)</label>
+                                                                <label id="valueStyle" style="color:grey; font-weight:400; margin-left:10px" >Please separate values by , (comma)</label><br>
                                                                 <label style="font-weight: lighter; color:grey">For Attachments, list up line by line in txt file. No comma needed.</label>
                                                             </div>
                                                             <div class="col-sp-2">

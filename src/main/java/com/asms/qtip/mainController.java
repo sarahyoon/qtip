@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +34,6 @@ public class mainController {
 
             queryBuilder qb = new queryBuilder();
             InfoDO infos = new InfoDO();
-
 
             if(map.get("enrollNum") == null){
                 infos.setEnrollNum("Input Enrollment # HERE");
@@ -60,6 +60,7 @@ public class mainController {
     public List<Map<String, Object>> operationsEditor (Object map, List<MultipartFile> file) throws IOException {
 
         List<Map<String, Object>> ops = (List<Map<String, Object>>) map;
+        Map<String, Object> attachMap = new HashMap<>();
         int getAttach = 0;
 
         for (int i = 0; i < ops.size(); i++) {
@@ -67,6 +68,8 @@ public class mainController {
             String isAttach = (String) ops.get(i).get("val");
 
             if ("UP".equals(isAttach)) {
+
+                List<String> list = new ArrayList<>();
                 InputStreamReader isr = new InputStreamReader(file.get(getAttach++).getInputStream());
                 BufferedReader br = new BufferedReader(isr);
 
@@ -76,14 +79,17 @@ public class mainController {
                 try {
                     while ((str = br.readLine()) != null) {
                         mvals += str + ",";
+                        list.add(str);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
+                attachMap.put((String) ops.get(i).get("field"), list );
                 ops.get(i).put("val", mvals.substring(0, mvals.length() - 1));
             }
-
         }
+        ops.add(attachMap);
         return ops;
     }
 }
