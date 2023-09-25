@@ -36,7 +36,6 @@ public class queryBuilder {
                 declareQuery += variable.get(key);
                 declareQuery += "<br>";
             }
-
         }
 
         List<String> dates = dateRange(info.getStartDate(), info.getEndDate());
