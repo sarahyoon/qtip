@@ -58,13 +58,24 @@ public class queryBuilder {
             }
             query += declareQuery;
             query += tableQuery;
-            query+= "<br> union withsource= UnionTable ";
+            query += "<br> union withsource= UnionTable ";
 
             for(int i=0;i<tables.size();i++){
                 if(i == tables.size()-1){
                     query += tables.get(i);
                 }else{
                     query+= tables.get(i) + ", ";
+                }
+            }
+
+            query += "<br> | summarize Quantity = sum(Quantity), sum(Cost) by ";
+
+            List<String> setCols = info.getColumns();
+            for(int i=0;i<setCols.size();i++){
+                if(i==setCols.size()-1){
+                    query+= " " + setCols.get(i);
+                }else{
+                    query+= " " + setCols.get(i) + ",";
                 }
             }
         }
@@ -74,8 +85,8 @@ public class queryBuilder {
             query += declareQuery;
             tempQuery += makeQuery(tempQuery, info.getStartDate(), info.getEndDate(), info, ops, setVar,"N");
             query += tempQuery;
-        }
 
+        }
 
         return query;
     }
@@ -173,7 +184,7 @@ public class queryBuilder {
                 }
             }
         }
-        query += "<br> | summarize Quantity = sum(Quantity), sum(Cost) by ";
+        query += "<br> | summarize Quantity = sum(Quantity), Cost = sum(Cost) by ";
 
         List<String> cols = info.getColumns();
         for(int i=0;i<cols.size();i++){
