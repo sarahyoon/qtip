@@ -3,6 +3,12 @@ package com.asms.qtip;
 import org.apache.tomcat.util.json.ParseException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Period;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,8 +20,11 @@ public class queryBuilder {
 
         List<Map<String, Object>> ops = info.getOperations();
         String query = "";
+
         Map<String, String> variable = new HashMap<>();
         Map<String, String> setVar = new HashMap<>();
+
+        String declareQuery = "";
 
         //attachment exists
         if(ops.get(ops.size()-1).size()>0){
@@ -24,16 +33,60 @@ public class queryBuilder {
             setVar = declareList(ops.get(ops.size()-1)).get(1);
 
             for(String key : variable.keySet()){
-                query += variable.get(key);
-                query += "<br>";
+                declareQuery += variable.get(key);
+                declareQuery += "<br>";
             }
 
         }
 
-        //dateRange(info.getStartDate(), info.getEndDate());
+        List<String> dates = dateRange(info.getStartDate(), info.getEndDate());
 
+        if(dates.size()>0){
+
+            List<String> tables = new ArrayList<>();
+            for(int i =0;i<dates.size();i++){
+                tables.add("table"+ (i+1));
+            }
+            String tableQuery = "";
+            for(int i=0;i<dates.size();i++){
+
+                tableQuery += "<br> let "+tables.get(i)+" = ";
+                String startDate = dates.get(i).split(",")[0];
+                String endDate = dates.get(i).split(",")[1];
+                tableQuery += makeQuery(query, startDate, endDate, info, ops, setVar, "Y");
+                tableQuery += "<br>";
+            }
+            query += declareQuery;
+            query += tableQuery;
+            query+= "<br> union withsource= UnionTable ";
+
+            for(int i=0;i<tables.size();i++){
+                if(i == tables.size()-1){
+                    query += tables.get(i);
+                }else{
+                    query+= tables.get(i) + ", ";
+                }
+            }
+        }
+
+        else{
+            String tempQuery = "";
+            query += declareQuery;
+            tempQuery += makeQuery(tempQuery, info.getStartDate(), info.getEndDate(), info, ops, setVar,"N");
+            query += tempQuery;
+        }
+
+
+        return query;
+    }
+
+    public static String makeQuery (String query, String startDate, String endDate, InfoDO info, List<Map<String, Object>> ops, Map<String, String> setVar, String isCross){
+
+        if("Y".equals(isCross)){
+            query+= "(";
+        }
         query += "GetUCDDAMPAWSv2("+ info.getEnrollNum()+",";
-        query += "datetime("+ info.getStartDate() +"),datetime(" + info.getEndDate() + "))";
+        query += "datetime("+ startDate +"),datetime(" + endDate + "))";
 
         //CostType
         if(info.getCostType().equals("Actual")){
@@ -130,6 +183,9 @@ public class queryBuilder {
                 query+= " " + cols.get(i) + ",";
             }
         }
+        if("Y".equals(isCross)){
+            query+=");";
+        }
 
         return query;
     }
@@ -170,11 +226,48 @@ public class queryBuilder {
         return listSet;
     }
 
-//    public static Map<String, String> dateRange(String start, String end){
-//        Map<String, String> dates = new HashMap<>();
-//
-//
-//
-//        return dates;
-//    }
+    public static List<String> dateRange(String start, String end){
+        //Map<String, String> dates = new HashMap<>();
+        List<String> dates = new ArrayList<>();
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate startDate = LocalDate.parse(start,formatter);
+        LocalDate endDate = LocalDate.parse(end,formatter);
+
+        Period period = Period.between(startDate, endDate);
+        int months = period.getMonths();
+
+        YearMonth moStart = YearMonth.from(startDate);
+        YearMonth moEnd = YearMonth.from(endDate);
+
+        //if year/months is not same
+        if(!moStart.equals(moEnd)){
+
+            //시작
+            dates.add(startDate + "," + moStart.atEndOfMonth());
+            System.out.println(startDate + ", " + moStart.atEndOfMonth());
+
+            if(months > 0){
+                for(int i=1;i<months;i++){
+                    LocalDate nextMonth = startDate.plusMonths(i);
+                    String tMonth= nextMonth.getMonthValue()+"";
+
+                    if(nextMonth.getMonthValue()<10){
+                        tMonth = "0"+ tMonth;
+                    }
+                    String temp = nextMonth.getYear() + "-" + tMonth + "-01";
+                    LocalDate tempDate = LocalDate.parse(temp, formatter);
+                    YearMonth tempMonth = YearMonth.from(tempDate);
+                    dates.add(tempMonth.atDay(1)  + "," + tempMonth.atEndOfMonth());
+                    System.out.println( tempMonth.atDay(1)  + ", " + tempMonth.atEndOfMonth());
+                    }
+            }
+            //마지막
+            dates.add(moEnd.atDay(1) + "," + endDate);
+            System.out.println(moEnd.atDay(1) + ", " + endDate);
+            System.out.println(months);
+        }
+
+        return dates;
+    }
 }

@@ -88,6 +88,38 @@
         display: none;
     }
 
+    .upSubLabel{
+        display: inline-block;
+        color: grey;
+        padding: 0.5rem;
+        font-family: sans-serif;
+        border-radius: 0.3rem;
+        border-color:grey;
+        border-style:solid;
+        border-width:thin;
+        cursor: pointer;
+        margin-bottom: 0;
+        margin-right:5px;
+    }
+    .upSubLabel:hover{
+        background-color:grey;
+        color:white;
+    }
+
+    #upSubName{
+        width:130px;
+        height:42px;
+        font-family: sans-serif;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        margin-right:5px;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        white-space: nowrap;
+    }
+
+
 </style>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
@@ -200,7 +232,6 @@
                                             <!-- Date range -->
                                             <div class="form-group">
                                                 <label>Date range:</label><br>
-                                                <label style="font-weight: lighter; color:grey">Cross month is not available, yet.</label>
                                                 <div class="input-group" style="width:350px">
                                                     <div class="input-group-prepend">
                                                     <span class="input-group-text">
@@ -219,11 +250,10 @@
                                                             <button type="button" class="btn btn-secondary" id="addSubs_btn">Add</button>
                                                     </span>
                                                     <div style="margin-right:10px"></div>
-                                                        <div class="custom-file">
-                                                            <input type="file" id="SubList" class="custom-file-input" style="ime-mode:inactive;" >
-                                                            <label class="custom-file-label" for="SubList" id="sub_name"></label>
-                                                        </div>
-                                                        <button type="button" class="btn btn-block btn-outline-danger btn-sm" style="width:75px;" id="sub_cancel">cancel</button>
+                                                            <input type="file" class= "upSub" id="SubList" hidden />
+                                                            <label class="upSubLabel" for="SubList">Bulk Upload</label>
+                                                            <span id="upSubName">No File Chosen</span>
+                                                        <button type="button" class="btn btn-block btn-outline-danger btn-sm" style="width:70px;" id="sub_cancel">cancel</button>
                                                 </div>
                                                 <div id="file_sub_List" style="display: none;">
                                                 </div>
@@ -244,17 +274,24 @@
 
                                             <div class="form-group">
                                                 <label>Columns</label>
-                                                <div class="row" id="columns"></div>
+                                                <div class="row" id="columns">
+                                                    <div id="defaultCols"></div>
+                                                    <div id="expandCols" style="display:none"></div>
+                                                </div>
                                             </div>
 
                                             <div class="form-group">
-                                                <label>Meter Category</label>
+                                                <button type="button" class="btn btn-block btn-outline-primary btn-sm" id="showColumns">Show More Columns</button>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>Meter Category (Optional)</label>
                                                 <select class="select2bs4" multiple="multiple" data-placeholder="Select Meter Category" style="width: 100%;">
                                                 </select>
                                             </div>
 
                                             <div class="form-group">
-                                                <label>Add Options</label>
+                                                <label>Add Options (Optional)</label>
                                                 <ul style="list-style: none; padding-left:10px">
                                                     <li>
                                                         <div class="row">
@@ -378,7 +415,7 @@
 
     var enroll_num;
 
-    var colunms_list = ["Provider",  "BillingMonth", "ConsumedService", "CostCenter", "EffectivePrice", "EnrollmentNumber", "IsMonetaryCommitmentService", "MeterId", "OfferId",
+    var colunms_list = ["Provider",  "BillingMonth", "ConsumedService", "CostCenter", "EnrollmentNumber", "IsMonetaryCommitmentService", "MeterId", "OfferId",
         "OfferName", "OrderNumber", "PartnerId", "PartNumber", "PlanId", "PlanName", "ProductId", "ProductOrderId", "ProductOrderName", "PublisherId", "PublisherName", "BenefitId",
         "ReservationId", "ReservationName", "ResourceGroup", "ResourceGuid", "ResourceLocation", "ResourceName", "ResourceType", "Tags", "UnitOfMeasure", "UnitPrice",
         "ChargeType", "PublisherType", "Frequency", "ChargeTypeInternal", "UnitPriceUSD", "UnitPriceScaled", "PayGPrice", "PayGPriceUSD", "Currency", "PriceModel", "ReservationUpFrontValue",
@@ -386,7 +423,7 @@
         "ServiceTier", "UnitOfMeasureUCDD"];
 
     var column_list_checked=["Date","SubscriptionGuid","MeterCategory","MeterSubCategory", "MeterName","ResourceId", "AdditionalInfo","ChargeType","ChargeTypeInternal", "EffectivePrice"];
-    var field_list = ["MeterCategory","MeterName","ResourceId", "AdditionalInfo","ChargeTypeInternal", "BenefitName"];
+    var field_list = ["MeterName","ResourceId", "AdditionalInfo","ChargeTypeInternal", "BenefitName"];
 
     var meterCategory_list=["Unassigned","All","Compute","Storage","SQL","CDN","Service Bus","Access Control","Cache","SQL Reporting","VPN Gateway","Media","Media Services","Backup","Virtual Machines","Virtual Machines Licenses",
         "Cloud Services","BizTalk Services","Integration","Azure App Service","Multi-Factor Authentication","Data Management","Mobile Services","Notification Hubs","Scheduler","Identity","Visual Studio","Networking","HDInsight","Websites",
@@ -451,7 +488,8 @@
             subListFile = "Y";
 
             var file = $(this)[0].files[0];
-            $('#sub_name')[0].innerText = file.name;
+            $('#upSubName')[0].innerText = file.name;
+
             $('#chips_area').remove();
 
             var fr = new FileReader();
@@ -467,7 +505,7 @@
 
         $('#sub_cancel').click(function(){
             subListFile="N";
-            $('#sub_name')[0].innerText = '';
+            $('#upSubName')[0].innerText = 'No File Chosen';
             var html = "<div id=\"chips_area\">";
             html += "<div class=\"chip\" id=\"all_chip\">";
             html += "All";
@@ -522,16 +560,27 @@
                 "<input class=\"form-check-input\" type=\"checkbox\" checked> " +
                 "<label class=\"form-check-label\">" + data + "</label> </div>";
 
-           $("#columns").append(template);
+           $("#defaultCols").append(template);
         });
 
-        // //columns_uncheck
-        colunms_list.forEach(function(data){
-            const template="<div class=\"form-check\">"+
+        colunms_list.forEach(function(data) {
+            const template = "<div class=\"form-check\">" +
                 "<input class=\"form-check-input\" type=\"checkbox\"> " +
                 "<label class=\"form-check-label\">" + data + "</label> </div>";
+            $("#expandCols").append(template);
+        });
 
-            $("#columns").append(template);
+        $('#showColumns').click(function(){
+            //columns_uncheck
+            var toggle = $("#expandCols")[0].style.display;
+            if(toggle == "none"){
+                $("#expandCols")[0].style.display = "block";
+                $("#showColumns")[0].innerHTML = "Show Less";
+            }else{
+                $("#expandCols")[0].style.display = "none";
+                $("#showColumns")[0].innerHTML = "Show More Columns";
+            }
+
         });
 
         //Initialize Select2 Elements
