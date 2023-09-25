@@ -490,6 +490,12 @@
             var file = $(this)[0].files[0];
             $('#upSubName')[0].innerText = file.name;
 
+            var ext = file.name.split('.')[1];
+            if(ext == "txt"){
+
+                
+            }
+
             $('#chips_area').remove();
 
             var fr = new FileReader();
