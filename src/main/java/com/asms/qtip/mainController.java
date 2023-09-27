@@ -48,6 +48,7 @@ public class mainController {
             infos.setSubIds((List<String>) map.get("subIds"));
             infos.setColumns((List<String>) map.get("columns"));
             infos.setMeterCategory((List<String>) map.get("meterCategory"));
+            infos.setSortby((String) map.get("sort"));
             infos.setOperations(operationsEditor(map.get("operations"),file));
 
             String query = qb.getUsageQuery(infos);

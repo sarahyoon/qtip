@@ -14,6 +14,8 @@ public class InfoDO {
     List<String> meterCategory;
     List<Map<String, Object>> operations;
 
+    String sortby;
+
     public String getEnrollNum() {
         return enrollNum;
     }
@@ -49,6 +51,10 @@ public class InfoDO {
         return operations;
     }
 
+    public String getSortby() {
+        return sortby;
+    }
+
     public void setSubIds(List<String> subIds) {
         this.subIds = subIds;
     }
@@ -75,5 +81,9 @@ public class InfoDO {
 
     public void setOperations(List<Map<String, Object>> operations) {
         this.operations = operations;
+    }
+
+    public void setSortby(String sortby) {
+        this.sortby = sortby;
     }
 }

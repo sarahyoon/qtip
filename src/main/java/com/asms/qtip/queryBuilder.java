@@ -26,30 +26,31 @@ public class queryBuilder {
 
         String declareQuery = "";
 
-        //attachment exists
-        if(ops.get(ops.size()-1).size()>0){
+        // attachment exists
+        if (ops.get(ops.size() - 1).size() > 0) {
 
-            variable = declareList(ops.get(ops.size()-1)).get(0);
-            setVar = declareList(ops.get(ops.size()-1)).get(1);
+            variable = declareList(ops.get(ops.size() - 1)).get(0);
+            setVar = declareList(ops.get(ops.size() - 1)).get(1);
 
-            for(String key : variable.keySet()){
+            for (String key : variable.keySet()) {
                 declareQuery += variable.get(key);
                 declareQuery += "<br>";
             }
         }
 
+        System.out.println(info.getSubIds());
         List<String> dates = dateRange(info.getStartDate(), info.getEndDate());
 
-        if(dates.size()>0){
+        // If it is cross month
+        if (dates.size() > 0) {
 
             List<String> tables = new ArrayList<>();
-            for(int i =0;i<dates.size();i++){
-                tables.add("table"+ (i+1));
+            for (int i = 0; i < dates.size(); i++) {
+                tables.add("table" + (i + 1));
             }
             String tableQuery = "";
-            for(int i=0;i<dates.size();i++){
-
-                tableQuery += "<br> let "+tables.get(i)+" = ";
+            for (int i = 0; i < dates.size(); i++) {
+                tableQuery += "<br> let " + tables.get(i) + " = ";
                 String startDate = dates.get(i).split(",")[0];
                 String endDate = dates.get(i).split(",")[1];
                 tableQuery += makeQuery(query, startDate, endDate, info, ops, setVar, "Y");
@@ -59,125 +60,126 @@ public class queryBuilder {
             query += tableQuery;
             query += "<br> union withsource= UnionTable ";
 
-            for(int i=0;i<tables.size();i++){
-                if(i == tables.size()-1){
+            for (int i = 0; i < tables.size(); i++) {
+                if (i == tables.size() - 1) {
                     query += tables.get(i);
-                }else{
-                    query+= tables.get(i) + ", ";
+                } else {
+                    query += tables.get(i) + ", ";
                 }
             }
 
             query += "<br> | summarize Quantity = sum(Quantity), sum(Cost) by ";
 
             List<String> setCols = info.getColumns();
-            for(int i=0;i<setCols.size();i++){
-                if(i==setCols.size()-1){
-                    query+= " " + setCols.get(i);
-                }else{
-                    query+= " " + setCols.get(i) + ",";
+            for (int i = 0; i < setCols.size(); i++) {
+                if (i == setCols.size() - 1) {
+                    query += " " + setCols.get(i);
+                } else {
+                    query += " " + setCols.get(i) + ",";
                 }
             }
         }
 
-        else{
+        // If it not a cross month
+        else {
             String tempQuery = "";
             query += declareQuery;
-            tempQuery += makeQuery(tempQuery, info.getStartDate(), info.getEndDate(), info, ops, setVar,"N");
+            tempQuery += makeQuery(tempQuery, info.getStartDate(), info.getEndDate(), info, ops, setVar, "N");
             query += tempQuery;
-
         }
 
         return query;
     }
 
-    public static String makeQuery (String query, String startDate, String endDate, InfoDO info, List<Map<String, Object>> ops, Map<String, String> setVar, String isCross){
+    public static String makeQuery(String query, String startDate, String endDate, InfoDO info,
+            List<Map<String, Object>> ops, Map<String, String> setVar, String isCross) {
 
-        if("Y".equals(isCross)){
-            query+= "(";
+        if ("Y".equals(isCross)) {
+            query += "(";
         }
-        query += "GetUCDDAMPAWSv2("+ info.getEnrollNum()+",";
-        query += "datetime("+ startDate +"),datetime(" + endDate + "))";
+        query += "GetUCDDAMPAWSv2(" + info.getEnrollNum() + ",";
+        query += "datetime(" + startDate + "),datetime(" + endDate + "))";
 
-        //CostType
-        if(info.getCostType().equals("Actual")){
-            query+= "<br> | where IsActualCost =="  + "True";
-        }
-        else{
-            query+= "<br> | where IsAmortizedCost ==" + "True";
+        // CostType
+        if (info.getCostType().equals("Actual")) {
+            query += "<br> | where IsActualCost ==" + "True";
+        } else {
+            query += "<br> | where IsAmortizedCost ==" + "True";
         }
         query += "<br> | join hint.strategy = broadcast kind = leftouter (vwMeterAll) on MeterId";
 
-        //Subs
+        // Subs
         List<String> list = info.getSubIds();
-        if(!list.get(0).equals("All")){
+        if (!list.get(0).equals("All")) {
             query += "<br> | where SubscriptionGuid in~ (";
 
-            for(int i=0;i<list.size();i++){
+            for (int i = 0; i < list.size(); i++) {
 
-                if(i == list.size()-1){
-                    query += "\"" +list.get(i) + "\")";
-                }
-                else{
-                    query += "\"" +list.get(i) + "\",";
+                if (i == list.size() - 1) {
+                    query += "\"" + list.get(i) + "\")";
+                } else {
+                    query += "\"" + list.get(i) + "\",";
                 }
             }
         }
 
-        //MeterCategory
+        // MeterCategory
         List<String> mcs = info.getMeterCategory();
-        if(mcs.size() >0){
-            if(!mcs.get(0).equals("All")){
+        if (mcs.size() > 0) {
+            if (!mcs.get(0).equals("All")) {
                 query += "<br> | where MeterCategory in~ (";
 
-                for(int i=0;i<mcs.size();i++){
+                for (int i = 0; i < mcs.size(); i++) {
 
-                    if(i== mcs.size()-1){
-                        query += "\"" +mcs.get(i).trim() + "\")";
-                    }else{
-                        query += "\"" +mcs.get(i).trim() + "\",";
+                    if (i == mcs.size() - 1) {
+                        query += "\"" + mcs.get(i).trim() + "\")";
+                    } else {
+                        query += "\"" + mcs.get(i).trim() + "\",";
                     }
                 }
             }
         }
 
-        //Add Options
-
-        if(ops.size()-1>=1){
+        // Add Options
+        if (ops.size() - 1 >= 1) {
             Boolean isStart = true;
 
-            for(int i=0;i<ops.size()-1;i++){
+            for (int i = 0; i < ops.size() - 1; i++) {
 
-                if(!"".equals(ops.get(i).get("val"))){
+                if (!"".equals(ops.get(i).get("val"))) {
                     String fieldName = (String) ops.get(i).get("field");
-                    if(setVar.containsKey(fieldName)){
-                        //first line
-                        if(i==0 || isStart){
+                    // attachment
+                    if (setVar.containsKey(fieldName)) {
+                        // first line
+                        if (i == 0 || isStart) {
                             query += "<br> | where ";
-                            query+= fieldName + " " + ops.get(i).get("ops")  + "(" + setVar.get(fieldName)  + ")";
+                            query += fieldName + " " + ops.get(i).get("ops") + "(" + setVar.get(fieldName) + ")";
                             isStart = false;
-                        }
-                        else{
-                            query+= "<br>" + ops.get(i).get("clause") + " " + fieldName + " " + ops.get(i).get("ops") + "(" +  setVar.get(fieldName) + ")";
+                        } else {
+                            query += "<br>" + ops.get(i).get("clause") + " " + fieldName + " " + ops.get(i).get("ops")
+                                    + "(" + setVar.get(fieldName) + ")";
                         }
                     }
-                    else{
+
+                    // not attachment
+                    else {
                         String[] splitVals = ops.get(i).get("val").toString().split(",");
                         String setVals = "";
-                        for(int j=0;j<splitVals.length;j++){
-                            if(j == splitVals.length-1){
-                                setVals += "\"" + splitVals[j]+"\"";
-                            }else{
-                                setVals += "\"" + splitVals[j]+"\",";
+                        for (int j = 0; j < splitVals.length; j++) {
+                            if (j == splitVals.length - 1) {
+                                setVals += "\"" + splitVals[j] + "\"";
+                            } else {
+                                setVals += "\"" + splitVals[j] + "\",";
                             }
                         }
-                        //first line
-                        if(i==0 || isStart){
+                        // first line
+                        if (i == 0 || isStart) {
                             query += "<br> | where ";
-                            query+= ops.get(i).get("field") + " " + ops.get(i).get("ops")  + "(" +  setVals + ")";
+                            query += ops.get(i).get("field") + " " + ops.get(i).get("ops") + "(" + setVals + ")";
                             isStart = false;
-                        }
-                        else{
-                            query+= "<br>" + ops.get(i).get("clause") + " " + ops.get(i).get("field") + " " + ops.get(i).get("ops") + "(" +  setVals + ")";
+                        } else {
+                            query += "<br>" + ops.get(i).get("clause") + " " + ops.get(i).get("field") + " "
+                                    + ops.get(i).get("ops") + "(" + setVals + ")";
                         }
                     }
                 }
@@ -186,48 +188,49 @@ public class queryBuilder {
         query += "<br> | summarize Quantity = sum(Quantity), Cost = sum(Cost) by ";
 
         List<String> cols = info.getColumns();
-        for(int i=0;i<cols.size();i++){
-            if(i==cols.size()-1){
-                query+= " " + cols.get(i);
-            }else{
-                query+= " " + cols.get(i) + ",";
+        for (int i = 0; i < cols.size(); i++) {
+            if (i == cols.size() - 1) {
+                query += " " + cols.get(i);
+            } else {
+                query += " " + cols.get(i) + ",";
             }
         }
-        if("Y".equals(isCross)){
-            query+=");";
+
+        query += "<br> | " +info.getSortby();
+
+        if ("Y".equals(isCross)) {
+            query += ");";
         }
 
         return query;
     }
 
-    public static List<Map<String, String>> declareList(Map<String, Object> map){
+    public static List<Map<String, String>> declareList(Map<String, Object> map) {
 
         List<Map<String, String>> listSet = new ArrayList<>();
         Map<String, String> variable = new HashMap<>();
         Map<String, String> listName = new HashMap<>();
         int num = 1;
 
-
-        for(String key : map.keySet()){
-            String query="";
+        for (String key : map.keySet()) {
+            String query = "";
             List<String> list = (List<String>) map.get(key);
-            query += "//"+key+"<br>";
-            query+= "let list"+ num + " = datatable(List:string) <br>";
-            query+= "[";
+            query += "//" + key + "<br>";
+            query += "let list" + num + " = datatable(List:string) <br>";
+            query += "[";
 
-            for(int i=0;i<list.size();i++){
+            for (int i = 0; i < list.size(); i++) {
 
-                if(i == list.size()-1){
-                    query+= "\'" + list.get(i) + "\'";
-                    query+= "];";
-                }
-                else{
-                    query+= "\'" + list.get(i) + "\',";
+                if (i == list.size() - 1) {
+                    query += "\'" + list.get(i) + "\'";
+                    query += "];";
+                } else {
+                    query += "\'" + list.get(i) + "\',";
                 }
             }
             query += "<br>";
-            variable.put("list"+num, query);
-            listName.put(key, "list"+num);
+            variable.put("list" + num, query);
+            listName.put(key, "list" + num);
             num++;
         }
         listSet.add(variable);
@@ -236,13 +239,13 @@ public class queryBuilder {
         return listSet;
     }
 
-    public static List<String> dateRange(String start, String end){
-        //Map<String, String> dates = new HashMap<>();
+    public static List<String> dateRange(String start, String end) {
+        // Map<String, String> dates = new HashMap<>();
         List<String> dates = new ArrayList<>();
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate startDate = LocalDate.parse(start,formatter);
-        LocalDate endDate = LocalDate.parse(end,formatter);
+        LocalDate startDate = LocalDate.parse(start, formatter);
+        LocalDate endDate = LocalDate.parse(end, formatter);
 
         Period period = Period.between(startDate, endDate);
         int months = period.getMonths();
@@ -250,29 +253,29 @@ public class queryBuilder {
         YearMonth moStart = YearMonth.from(startDate);
         YearMonth moEnd = YearMonth.from(endDate);
 
-        //if year/months is not same
-        if(!moStart.equals(moEnd)){
+        // if year/months is not same
+        if (!moStart.equals(moEnd)) {
 
-            //시작
+            // 시작
             dates.add(startDate + "," + moStart.atEndOfMonth());
             System.out.println(startDate + ", " + moStart.atEndOfMonth());
 
-            if(months > 0){
-                for(int i=1;i<months;i++){
+            if (months > 0) {
+                for (int i = 1; i < months; i++) {
                     LocalDate nextMonth = startDate.plusMonths(i);
-                    String tMonth= nextMonth.getMonthValue()+"";
+                    String tMonth = nextMonth.getMonthValue() + "";
 
-                    if(nextMonth.getMonthValue()<10){
-                        tMonth = "0"+ tMonth;
+                    if (nextMonth.getMonthValue() < 10) {
+                        tMonth = "0" + tMonth;
                     }
                     String temp = nextMonth.getYear() + "-" + tMonth + "-01";
                     LocalDate tempDate = LocalDate.parse(temp, formatter);
                     YearMonth tempMonth = YearMonth.from(tempDate);
-                    dates.add(tempMonth.atDay(1)  + "," + tempMonth.atEndOfMonth());
-                    System.out.println( tempMonth.atDay(1)  + ", " + tempMonth.atEndOfMonth());
-                    }
+                    dates.add(tempMonth.atDay(1) + "," + tempMonth.atEndOfMonth());
+                    System.out.println(tempMonth.atDay(1) + ", " + tempMonth.atEndOfMonth());
+                }
             }
-            //마지막
+            // 마지막
             dates.add(moEnd.atDay(1) + "," + endDate);
             System.out.println(moEnd.atDay(1) + ", " + endDate);
             System.out.println(months);

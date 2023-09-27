@@ -119,6 +119,12 @@
         white-space: nowrap;
     }
 
+    #sort{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight:normal;
+    }
 
 </style>
 <body class="hold-transition sidebar-mini">
@@ -283,13 +289,29 @@
                                             <div class="form-group">
                                                 <button type="button" class="btn btn-block btn-outline-primary btn-sm" id="showColumns">Show More Columns</button>
                                             </div>
-
+                                            <hr/>
                                             <div class="form-group">
-                                                <label>Meter Category (Optional)</label>
-                                                <select class="select2bs4" multiple="multiple" data-placeholder="Select Meter Category" style="width: 100%;">
-                                                </select>
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <label>Meter Category (Optional)</label>
+                                                        <select class="select2bs4" multiple="multiple" data-placeholder="Select Meter Category" style="width: 100%;">
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <label>Sorting (Optional)</label>
+                                                        <div class="row" style="margin-left:2px">
+                                                            <label id="sort">Sort By</label>
+                                                            <select class="form-control" style="width:250px; margin-left:10px" id="sortby">
+                                                            </select>
+                                                            <select class="form-control" style="width:250px; margin-left:15px" id="orders">
+                                                                <option>asc</option>
+                                                                <option>desc</option>
+                                                            </select>
+                                                        </div>
+                                                        </select>
+                                                    </div>
+                                                </div>
                                             </div>
-
                                             <div class="form-group">
                                                 <label>Add Options (Optional)</label>
                                                 <ul style="list-style: none; padding-left:10px">
@@ -600,6 +622,12 @@
             document.querySelector('.select2bs4').append(option);
         });
 
+        column_list_checked.forEach(function(data){
+            var option = document.createElement('option');
+            option.innerText = data;
+            document.querySelector('#sortby').append(option);
+        });
+
         var list = field_list.concat(colunms_list);
 
         list.forEach(function (data){
@@ -696,6 +724,11 @@
             });
             meter_category.pop();
 
+            //Sort by
+            var colsname = $("#sortby").val();
+            var orders = $("#orders").val();
+            var sortby ="sort by " + colsname + " " + orders;
+
             //options
             /**
              * [{clause : And/or,
@@ -740,6 +773,7 @@
             obj.costType = costType;
             obj.columns = columns;
             obj.meterCategory = meter_category;
+            obj.sort = sortby;
             obj.operations = operations;
 
             const blob = new Blob([JSON.stringify(obj)], {type:'application/json'});
