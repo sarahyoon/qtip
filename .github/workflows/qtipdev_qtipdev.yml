@@ -49,5 +49,5 @@ jobs:
         with:
           app-name: 'qtipdev'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_B65CCF20FB084209B7A09597C73F08C2 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_A523CF9FE3274CE2B90F2065607366CE }}
           package: '*.jar'
