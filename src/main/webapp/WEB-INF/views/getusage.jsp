@@ -297,19 +297,6 @@
                                                         <select class="select2bs4" multiple="multiple" data-placeholder="Select Meter Category" style="width: 100%;">
                                                         </select>
                                                     </div>
-                                                    <div class="col-sm-6">
-                                                        <label>Sorting (Optional)</label>
-                                                        <div class="row" style="margin-left:2px">
-                                                            <label id="sort">Sort By</label>
-                                                            <select class="form-control" style="width:250px; margin-left:10px" id="sortby">
-                                                            </select>
-                                                            <select class="form-control" style="width:250px; margin-left:15px" id="orders">
-                                                                <option>asc</option>
-                                                                <option>desc</option>
-                                                            </select>
-                                                        </div>
-                                                        </select>
-                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -369,6 +356,21 @@
                                                         </div>
                                                     </li>
                                                 </ul>
+                                            </div>
+                                            <div class="form-group">
+                                            <div class="col-sm-6">
+                                                <label>Sorting (Optional)</label>
+                                                <div class="row" style="margin-left:2px">
+                                                    <label id="sort">Sort By</label>
+                                                    <select class="form-control" style="width:250px; margin-left:10px" id="sortby">
+                                                    </select>
+                                                    <select class="form-control" style="width:250px; margin-left:15px" id="orders">
+                                                        <option>asc</option>
+                                                        <option>desc</option>
+                                                    </select>
+                                                </div>
+                                                </select>
+                                            </div>
                                             </div>
                                                     <button class="btn btn-primary" onclick="stepper.previous()">Previous</button>
                                                     <button type="submit" class="btn btn-primary" id="submit_form">Submit</button>
