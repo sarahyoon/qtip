@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>QTip for ASMS</title>
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+    <!-- daterange picker -->
+    <link rel="stylesheet" href="plugins/daterangepicker/daterangepicker.css">
+    <!-- iCheck for checkboxes and radio inputs -->
+    <link rel="stylesheet" href="plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <!-- Bootstrap Color Picker -->
+    <link rel="stylesheet" href="plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css">
+    <!-- Tempusdominus Bootstrap 4 -->
+    <link rel="stylesheet" href="plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+    <!-- Bootstrap4 Duallistbox -->
+    <link rel="stylesheet" href="plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css">
+    <!-- BS Stepper -->
+    <link rel="stylesheet" href="plugins/bs-stepper/css/bs-stepper.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="dist/css/adminlte.min.css">
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
+</head>
+<style>
+
+    .upIdLable{
+        display: inline-block;
+        color: grey;
+        padding: 0.5rem;
+        font-family: sans-serif;
+        border-radius: 0.3rem;
+        border-color:grey;
+        border-style:solid;
+        border-width:thin;
+        cursor: pointer;
+        margin-bottom: 0;
+        margin-right:5px;
+    }
+    .upIdLable:hover{
+        background-color:grey;
+        color:white;
+    }
+
+    #upIdName{
+        width:130px;
+        height:42px;
+        font-family: sans-serif;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        margin-right:5px;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        white-space: nowrap;
+    }
+</style>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+    <!-- Main Sidebar Container -->
+    <aside class="main-sidebar sidebar-dark-primary elevation-4" style="width:230px">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <!-- Sidebar user (optional) -->
+            <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                <div class="info">
+                    <a href="#" class="d-block">ASMS QTip</a>
+                </div>
+            </div>
+            <!-- Sidebar Menu -->
+            <nav class="mt-2">
+                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                    <li class="nav-item menu-open">
+                        <a href="#" class="nav-link active">
+                            <i class="nav-icon fas fa-tachometer-alt"></i>
+                            <p>
+                                Get Usage
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="/" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>EA Usage</p>
+                                </a>
+                            </li>
+                        </ul>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="dhUsage" class="nav-link active">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Dedicated Host</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="slacalc" class="nav-link">
+                            <i class="nav-icon fas fa-th"></i>
+                            <p>
+                                SLA Uptime Calculator
+                            </p>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </aside>
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper" style="margin-left:230px">
+        <!-- Main content -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>Dedicated Host</h1>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card card-default">
+                            <div class="card-body p-0">
+                                <div class="bs-stepper">
+                                    <div class="bs-stepper-header" role="tablist">
+                                        <div class="step" data-target="#selectOptions">
+                                            <button type="button" class="step-trigger" role="tab" aria-controls="selectOptions" id="selectOptions-trigger">
+                                                <span class="bs-stepper-circle">1</span>
+                                                <span class="bs-stepper-label">Select Options</span>
+                                            </button>
+                                        </div>
+                                        <div class="line"></div>
+                                        <div class="step" data-target="#getQuery">
+                                            <button type="button" class="step-trigger" role="tab" aria-controls="getQuery" id="getQuery-trigger">
+                                                <span class="bs-stepper-circle">2</span>
+                                                <span class="bs-stepper-label">Get query</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="bs-stepper-content">
+                                        <div id="selectOptions" class="content" role="tabpanel" aria-labelledby="selectOptions-trigger">
+                                            <div class="form-group">
+                                                    <label>Enrollment #</label>
+                                                    <input type="text" style="width:200px" class="form-control rounded-0" id="enroll_num">
+                                                    <br>
+                                                    <label> Start Date </label>
+                                                    <div class="input-group date" style="width:200px" id="startDate" data-target-input="nearest">
+                                                        <input type="text" id="sd" class="form-control datetimepicker-input" data-target="#startDate">
+                                                        <div class="input-group-append" data-target="#startDate" data-toggle="datetimepicker">
+                                                            <div class="input-group-text">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <label> End Date </label>
+                                                    <div class="input-group date" style="width:200px" id="endDate" data-target-input="nearest">
+                                                        <input type="text" id="ed" class="form-control datetimepicker-input" data-target="#endDate">
+                                                        <div class="input-group-append" data-target="#endDate" data-toggle="datetimepicker">
+                                                            <div class="input-group-text">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <label>ResourceIds</label>
+                                                    <div class="input-group mb-2" style="width:650px">
+                                                        <input type="text" class="form-control rounded-0" id="add_Ids">
+                                                        <div style="margin-right:10px"></div>
+                                                        <input type="file" class= "upIds" id="IdList" hidden />
+                                                        <label class="upIdLable" for="IdList">Bulk Upload</label>
+                                                        <span id="upIdName">No File Chosen</span>
+                                                        <button type="button" class="btn btn-block btn-outline-danger btn-sm" style="width:70px;" id="id_cancel">cancel</button>
+                                                    </div>
+                                                <br>
+                                                <button type="submit" class="btn btn-primary" id="submit_form">Submit</button>
+                                            </div>
+                                        </div>
+                                        <div id="getQuery" class="content" role="tabpanel" aria-labelledby="getQuery-trigger">
+                                            <!-- Date range -->
+                                            <div class="form-group">
+                                                <label>Query Results</label>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <div class="card-body">
+                                                            <label>Mapping VM and Host URI</label>
+                                                            <div class="callout callout-danger" id="part1">
+                                                            </div>
+                                                            <button class="btn btn-default" id="q1copy">Copy</button>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <label>Usage for Host URI</label>
+                                                            <div class="callout callout-info" id="part2">
+                                                            </div>
+                                                            <button class="btn btn-default" id="q2copy">Copy</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button class="btn btn-primary" id="queryReset" >Previous</button>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+<!-- jQuery -->
+<script src="plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+
+<script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- Select2 -->
+<script src="plugins/select2/js/select2.full.min.js"></script>
+<!-- Bootstrap4 Duallistbox -->
+<script src="plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
+<!-- InputMask -->
+<script src="plugins/moment/moment.min.js"></script>
+<script src="plugins/inputmask/jquery.inputmask.min.js"></script>
+<!-- date-range-picker -->
+<script src="plugins/daterangepicker/daterangepicker.js"></script>
+<!-- bootstrap color picker -->
+<script src="plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js"></script>
+<script src="plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js"></script>
+<!-- Tempusdominus Bootstrap 4 -->
+<script src="plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+<!-- BS-Stepper -->
+<script src="plugins/bs-stepper/js/bs-stepper.min.js"></script>
+<!-- AdminLTE App -->
+<script src="dist/js/adminlte.min.js"></script>
+<!-- SweetAlert2 -->
+<script src="plugins/sweetalert2/sweetalert2.min.js"></script>
+
+<script>
+    var isAttached = "N";
+    // BS-Stepper Init
+    document.addEventListener('DOMContentLoaded', function () {
+        window.stepper = new Stepper(document.querySelector('.bs-stepper'))
+    });
+
+    $(function(){
+
+        $("#startDate").datetimepicker({
+            format: 'L'
+        });
+        $("#endDate").datetimepicker({
+            format: 'L'
+        });
+        //Initialize Select2 Elements
+        $('.select2bs4').select2({
+            theme: 'bootstrap4'
+        });
+        //Datemask2 mm/dd/yyyy
+        $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' });
+
+
+        $('#IdList').on("change", function(e){
+            isAttached = "Y";
+            var file = $(this)[0].files[0];
+            $('#upIdName')[0].innerText = file.name;
+
+        });
+
+        $('#id_cancel').click(function(){
+            isAttached="N";
+            $('#upIdName')[0].innerText = 'No File Chosen';
+        });
+
+        $('#submit_form').click(function () {
+            //date range
+            var enroll_num = $('#enroll_num').val();
+            var sd = $('#sd').val();
+            var ed = $('#ed').val();
+            var formData = new FormData();
+
+            if (sd == "" || ed == "") {
+                alert("Please select start date and end date.")
+            }
+            else {
+                var stM = sd.split("/")[0].trim();
+                var stD = sd.split("/")[1].trim();
+                var stY = sd.split("/")[2].trim();
+
+                var edM = ed.split("/")[0].trim();
+                var edD = ed.split("/")[1].trim();
+                var edY = ed.split("/")[2].trim();
+
+                var startDate = stY + "-" + stM + "-" + stD;
+                var endDate = edY + "-" + edM + "-" + edD;
+
+                console.log(startDate + ", " + endDate);
+                var rIds = [];
+
+                if (isAttached == "N") {
+                    let vals = $('#add_Ids').val();
+                    if(vals.indexOf(',')>0){
+                        rIds = vals.split(",");
+                    }
+                    else{
+                        rIds.push(vals);
+                    }
+                } else {
+                    var file = $("#IdList")[0].files[0];
+                    formData.append("files", file);
+                    rIds.push("Yes");
+                }
+            }
+            const obj = new Object();
+            obj.enrollNum = enroll_num;
+            obj.startDate = startDate;
+            obj.endDate = endDate;
+            obj.rIds = rIds;
+
+            const blob = new Blob([JSON.stringify(obj)], {type:'application/json'});
+            formData.append('infos', blob);
+
+            $.ajax({
+                type:'post',
+                url:'dhUsage',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success:function(data){
+                    console.log(data.query[0]);
+                    $('#part1').append(data.query[0]);
+                    $('#part2').append(data.query[1]);
+                    stepper.next();
+                },
+                error:function(data, xhr, status, error){
+                    console.log(data.query);
+                    console.log(status, error);
+                }
+            });
+        });
+
+        $('#queryReset').click(function(){
+            stepper.previous();
+            $('#part1').empty();
+            $('#part2').empty();
+        });
+
+        var Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+        });
+
+        $(document).on("click", "#q1copy", function(event){
+            const str = document.getElementById("part1").innerText;
+            navigator.clipboard.writeText(str);
+            Toast.fire({
+                icon: 'success',
+                title: 'Copied!'
+            })
+        });
+        $(document).on("click", "#q2copy", function(event){
+            const str = document.getElementById("part2").innerText;
+            navigator.clipboard.writeText(str);
+            Toast.fire({
+                icon: 'success',
+                title: 'Copied!'
+            })
+        });
+
+    });
+
+</script>
+</body>
+</html>
